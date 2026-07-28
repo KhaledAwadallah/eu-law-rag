@@ -1,0 +1,10 @@
+arxiv
+pymupdf
+sentence-transformers
+chromadb
+gradio
+fastapi
+uvicorn
+pytest
+ruff
+python-dotenv
