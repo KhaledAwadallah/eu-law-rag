@@ -1,4 +1,4 @@
-arxiv
+arxiv==4.0.0
 pymupdf
 sentence-transformers
 chromadb
