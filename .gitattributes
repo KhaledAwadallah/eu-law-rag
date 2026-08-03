@@ -1,0 +1,9 @@
+# Normalize line endings: store as LF in the repo for all text files.
+* text=auto eol=lf
+
+# PowerShell scripts are Windows-native; keep CRLF on checkout.
+*.ps1 text eol=crlf
+
+# Never touch binary files.
+*.pdf binary
+*.png binary

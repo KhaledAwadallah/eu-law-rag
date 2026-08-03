@@ -7,8 +7,8 @@ Ask questions about a collection of ML research papers and get answers grounded 
 ## Status
 
 - [x] Step 1 — project scaffold, environment, CI-ready structure
-- [ ] Step 2 — paper ingestion (arXiv API + PyMuPDF)
-- [ ] Step 3 — chunking
+- [x] Step 2 — paper ingestion (arXiv API + PyMuPDF): 50 papers in `data/pdfs`, parsed text in `data/text`
+- [x] Step 3 — chunking: 3,479 overlapping passages in `data/chunks.jsonl`
 - [ ] Step 4 — embedding + vector index (ChromaDB)
 - [ ] Step 5 — retrieval + grounded generation
 - [ ] Step 6 — evaluation benchmark
