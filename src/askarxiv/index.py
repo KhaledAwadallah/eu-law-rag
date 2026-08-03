@@ -1,10 +1,11 @@
-"""Step 4: embed all chunks and store them in a ChromaDB vector index.
+"""Embed all chunks and store them in a ChromaDB vector index.
 
 Provides:
     load_chunks(path) -> list[dict]      # read data/chunks.jsonl back in
     build_index(chunks, db_path) -> None # embed + store everything
 
-Run the whole step:  python -m askarxiv.index
+Command line:
+    python -m askarxiv.index
 """
 
 import json

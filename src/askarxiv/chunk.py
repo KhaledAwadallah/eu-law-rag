@@ -1,11 +1,12 @@
-"""Step 3: split paper text into overlapping passages ("chunks").
+"""Split paper text into overlapping passages ("chunks").
 
 Provides:
     clean_text(text) -> str                      # normalize whitespace
     chunk_text(text, paper_id, title, ...) -> list[dict]
     chunk_corpus(txt_dir, out_file) -> list[dict]  # chunk every paper, save JSONL
 
-Run the whole step:  python -m askarxiv.chunk
+Command line:
+    python -m askarxiv.chunk
 """
 
 import json
@@ -59,7 +60,7 @@ def chunk_corpus(txt_dir: str = "data/text",
     """Chunk every parsed paper and write one JSON object per line (JSONL).
 
     Titles are looked up from the metadata file so every chunk carries its
-    paper's title — that is what the app will later show as a citation.
+    paper's title.
     """
     meta_list = json.loads(pathlib.Path(config.METADATA_FILE).read_text(encoding="utf-8"))
 

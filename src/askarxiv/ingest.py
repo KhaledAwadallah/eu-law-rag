@@ -1,11 +1,12 @@
-"""Step 2: download arXiv papers and extract text from their PDFs.
+""" Download arXiv papers and extract text from their PDFs.
 
 Provides:
     download(query, n, outdir) -> list[dict]   # saves PDFs, returns + saves metadata
     pdf_to_text(path) -> str                   # PDF -> plain text, references removed
     extract_all(pdf_dir, txt_dir) -> None      # runs pdf_to_text over every PDF
 
-Run the whole step:  python -m askarxiv.ingest
+Command line:
+    python -m askarxiv.ingest
 """
 
 import json
@@ -19,7 +20,7 @@ import pymupdf
 
 from askarxiv import config
 
-USER_AGENT = "askarxiv/0.1 (student portfolio project)"
+USER_AGENT = "askarxiv/0.1"
 
 
 def _fetch_pdf(url: str, dest: pathlib.Path) -> None:
@@ -64,7 +65,7 @@ def download(query: str = config.ARXIV_QUERY,
         if not pdf_path.exists():
             print(f"downloading {paper_id}: {result.title[:60]}...")
             _fetch_pdf(result.pdf_url, pdf_path)
-            time.sleep(1)  # be polite to arXiv's servers between downloads
+            time.sleep(1)
         else:
             print(f"already have {paper_id}, skipping download")
         meta.append({

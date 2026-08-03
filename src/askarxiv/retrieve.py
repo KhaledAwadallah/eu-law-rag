@@ -1,9 +1,9 @@
-"""Step 4: similarity search - find the chunks most relevant to a question.
+""" Similarity search - find the chunks most relevant to a question.
 
 Provides:
     retrieve(question, k) -> list[dict]   # top-k chunks with titles and scores
 
-Try it from the command line:
+Command line:
     python -m askarxiv.retrieve "how can LLM inference be made faster?"
 """
 
@@ -15,8 +15,8 @@ from sentence_transformers import SentenceTransformer
 
 from askarxiv import config
 
-# BGE models are trained to expect this instruction in front of QUERIES
-# (not passages); it noticeably improves retrieval quality.
+# BGE models are trained to expect this instruction in front of QUERIES;
+# it noticeably improves retrieval quality.
 QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 
 
