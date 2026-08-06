@@ -1,0 +1,172 @@
+{
+  "summary": {
+    "timestamp": "2026-08-06 15:08",
+    "n_questions": 32,
+    "config": {
+      "k": 5,
+      "chunk_size": 1000,
+      "chunk_overlap": 150,
+      "max_chunks_per_paper": 2,
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "llm_model": null
+    },
+    "retrieval_hit_rate": 1
+  },
+  "rows": [
+    {
+      "id": "q01",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q02",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q03",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q04",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q05",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q06",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q07",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q08",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q09",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q10",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q11",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q12",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q13",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q14",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q15",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q16",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q17",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q18",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q19",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q20",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q21",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q22",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q23",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q24",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q25",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q26",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q27",
+      "answerable": true,
+      "retrieval_hit": true
+    },
+    {
+      "id": "q28",
+      "answerable": false
+    },
+    {
+      "id": "q29",
+      "answerable": false
+    },
+    {
+      "id": "q30",
+      "answerable": false
+    },
+    {
+      "id": "q31",
+      "answerable": false
+    },
+    {
+      "id": "q32",
+      "answerable": false
+    }
+  ]
+}

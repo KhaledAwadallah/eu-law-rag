@@ -1,0 +1,324 @@
+{
+  "summary": {
+    "timestamp": "2026-08-06 15:19",
+    "n_questions": 32,
+    "config": {
+      "k": 5,
+      "chunk_size": 1000,
+      "chunk_overlap": 150,
+      "max_chunks_per_paper": 2,
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "llm_model": "gpt-oss:20b"
+    },
+    "retrieval_hit_rate": 1,
+    "false_refusal_rate": 0.037037037037037035,
+    "refusal_accuracy": 1,
+    "citation_rate": 0.8846153846153846,
+    "faithfulness": 0.9423076923076923
+  },
+  "rows": [
+    {
+      "id": "q01",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "The feed\u2011forward network (FFN) dominates memory traffic and computation during LLM inference, and the Prox framework targets this component to accelerate decoding. [1][5]"
+    },
+    {
+      "id": "q02",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Prox uses the FFN intermediate state (the SwiGLU intermediate activation) as the signal to select which channels to keep when sparsifying activations. [1][2]"
+    },
+    {
+      "id": "q03",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Extending the speculation horizon can hurt speedup because the acceptance rate \u03b1 falls sharply as k grows, leading to an \u201cefficiency inversion\u201d where the actual acceleration drops instead of rising [1].  In addition, for large k the auto\u2011regressive approximation used by lightweight layers causes a steep decline in acceptance for tail tokens, further degrading performance [2]."
+    },
+    {
+      "id": "q04",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "The DIRECT framework tackles two main issues in LLM\u2011based sequence labeling: insufficient domain alignment and low inference efficiency. [1][2]"
+    },
+    {
+      "id": "q05",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "ORCA\u2011bench evaluates language\u2011model agents on **on\u2011call root\u2011cause analysis (RCA)** tasks in a production\u2011fidelity setting. [1] [2]"
+    },
+    {
+      "id": "q06",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Salience bias is the tendency of large language models to over\u2011prioritize explicit conditions supplied in a prompt\u2014such as numerical values\u2014while suppressing or ignoring the implicit physical or commonsense prerequisites needed to solve a task. This bias stems from training that rewards attention to every detail, causing models to be hijacked by irrelevant distractors and to neglect necessary commonsense reasoning [1][2]."
+    },
+    {
+      "id": "q07",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Fairness Pruning locates demographic bias in the GLU\u2011MLP layers of large language models, pinpointing neurons that respond differentially to demographic attributes in the GLU architecture and evaluating the signal at the down\u2011projection input. The evidence comes from using minimally contrastive prompt pairs and inference\u2011time activation capture to identify these neurons [1]."
+    },
+    {
+      "id": "q08",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Sequential memory editing is hard in 4\u2011bit quantized financial LLMs because the low\u2011precision quantization triggers a \u201cquantization stability crisis,\u201d causing existing editing methods to suffer catastrophic performance degradation and significant knowledge loss [1][2]."
+    },
+    {
+      "id": "q09",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": false,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "ParliamentBench evaluates deception using the social\u2011deduction game **Secret\u202fHitler**\u30101\u3011."
+    },
+    {
+      "id": "q10",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "PARTIAL",
+      "faithfulness": 0.5,
+      "answer": "FinSMART tackles the fact that most existing financial\u2011sentiment methods produce only discrete or lexicon\u2011based scores that cannot be directly used as continuous trading signals. By converting its predictions into continuous sentiment scores with a logit\u2011to\u2011score converter, FinSMART makes the sentiment output suitable for realistic portfolio construction and evaluation. [1]"
+    },
+    {
+      "id": "q11",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Standard packet capture (PCAP) files are binary, packet\u2011major formats that store every byte of each packet. This makes them unsuitable for LLMs because they lack a flow\u2011centric, human\u2011readable structure and produce extremely verbose output (a single packet\u2019s -V output can exceed 200 lines) that hinders temporal reasoning. Consequently, LLM\u2011based approaches typically feed raw hex bytes or CSV\u2011formatted features at the packet level, rather than a concise, flow\u2011oriented representation. [1][2]"
+    },
+    {
+      "id": "q12",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "The GGC approach targets the failure mode in which a generated SPARQL query is syntactically valid and executable but is **semantically mis\u2011aligned with the input question**, causing incorrect retrieval results. [2]"
+    },
+    {
+      "id": "q13",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    },
+    {
+      "id": "q14",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "TriShield defends against NeuroImprint\u2011style privacy backdoor attacks in federated LLM fine\u2011tuning. [1][2]"
+    },
+    {
+      "id": "q15",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "IFHierBench evaluates hierarchical instruction\u2011following, where constraints are organized in nested scopes (constraint\u2011tree depths) rather than as a flat list. It tests whether a model can satisfy constraints that apply to specific sections of a structured output, with higher\u2011level format choices licensing restrictions on nested subsections. [1][2]"
+    },
+    {
+      "id": "q16",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "MemTxn adds a transaction boundary to persistent agent memory, giving it the guarantees of write\u2011activation, conflict visibility, and full application\u2011state recovery. It supplies write\u2011ahead logging, checkpoints, atomic commit, and partial rollback so that updates can be committed or aborted safely and the memory can be restored to a consistent state. [1][2]"
+    },
+    {
+      "id": "q17",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": false,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "The Reasoning Consensus framework ensembles the **reasoning structure** of multiple LLMs, not just their final answers. It does this by extracting a directed\u2011acyclic\u2011graph (DAG) for each trace, merging those DAGs with a logic\u2011preserving operator, and weighting each node by cross\u2011trace attestation (i.e., how many traces support that step). This weighted reasoning\u2011consensus graph is then used to produce a final answer, and the ensemble outperforms matched\u2011budget majority voting and matches self\u2011consistency on a single model\u30101\u3011\u30102\u3011."
+    },
+    {
+      "id": "q18",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "DualAnchor tackles gloss\u2011free sign\u2011language translation and seeks to (1) preserve the pretrained language prior and (2) improve lexical fidelity by grounding lexical choices in visual evidence. [2]"
+    },
+    {
+      "id": "q19",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "PARTIAL",
+      "faithfulness": 0.5,
+      "answer": "The study compared three idea pools: human students, GPT\u20114 zero\u2011shot, and GPT\u20114 with example prompts. It found that both AI\u2011generated pools produced fewer unique ideas than the human pool, and that adding example prompts further reduced the number of distinct ideas [1][2]. Novelty was also evaluated by asking respondents to rate how novel each idea felt relative to other products, showing that AI ideas were perceived as less novel than human ideas [2]."
+    },
+    {
+      "id": "q20",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "CoevolveSim simulates the diffusion and co\u2011evolution of beliefs among interacting large language models, modeling how beliefs form and propagate within a networked population of LLM agents. [1][2]"
+    },
+    {
+      "id": "q21",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Narrative Anchoring is a failure mode in which identical clinical facts expressed in different sociolinguistic registers lead large language models to produce divergent diagnostic outputs. It is measured as a Narrative Anchoring Gap, which has been found to be statistically significant across models. [2][1]"
+    },
+    {
+      "id": "q22",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Linguistic monoculture is the reduction of population\u2011level variation in linguistic form that occurs when many users rely on the same large language model (LLM) [2]. It is caused by the widespread use of shared LLMs that tend to reproduce dominant, standardized varieties of English, thereby privileging Inner\u2011Circle forms and marginalising non\u2011standard or Global South varieties [3][4]."
+    },
+    {
+      "id": "q23",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "OptimismBench uncovers a systematic optimism bias\u2014where models give higher probabilities for success and lower for failure\u2014an error that calibration metrics, which aggregate unsigned errors, fail to reveal. [1]"
+    },
+    {
+      "id": "q24",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "AgentSnare interferes with autonomous penetration testing agents by injecting deceptive observations that mislead the agent\u2019s decision\u2011making. It reframes defense as trajectory\u2011adaptive steering, dynamically constructing and disclosing decoy artifacts conditioned on the agent\u2019s evolving actions, rather than relying on static, pre\u2011planted traps. The system generates candidate deceptive artifacts from the interaction history and current decoy state, then validates each candidate against the agent\u2019s current action, prior committed facts, and future steps to maintain global consistency across the entire agent\u2011decoy interaction context. This approach delays, diverts, and defuses the agent\u2019s exploitation attempts, preventing successful real\u2011target exploits. [1][2]"
+    },
+    {
+      "id": "q25",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "PARTIAL",
+      "faithfulness": 0.5,
+      "answer": "SecRespond is the first benchmark that evaluates LLM agents in a **post\u2011compromise** setting rather than the pre\u2011compromise, clean\u2011environment setups used by earlier benchmarks. It requires agents to analyze a forensic disk snapshot together with alerts, vulnerability scans and baseline checks from a host security product, and to produce forensic reports on intrusions, baseline risks, vulnerability risks, and a remediation plan [1][2]. This contrasts with prior benchmarks that focus on detecting attacks in an idealized pre\u2011compromise scenario and do not assess the agents\u2019 ability to investigate silent intrusions or generate comprehensive remediation strategies."
+    },
+    {
+      "id": "q26",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": false,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "The two\u2011step validation was evaluated in the digital product passport (DPP) domain\u30101\u3011\u30102\u3011."
+    },
+    {
+      "id": "q27",
+      "answerable": true,
+      "retrieval_hit": true,
+      "refused": false,
+      "cited": true,
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Existing automated metrics often fail to capture the complexity and variability inherent in LLM\u2011generated outputs, and they typically rely on explicit reference standards, which limits their use to domains with objective benchmarks. [2]"
+    },
+    {
+      "id": "q28",
+      "answerable": false,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    },
+    {
+      "id": "q29",
+      "answerable": false,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    },
+    {
+      "id": "q30",
+      "answerable": false,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    },
+    {
+      "id": "q31",
+      "answerable": false,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    },
+    {
+      "id": "q32",
+      "answerable": false,
+      "refused": true,
+      "cited": false,
+      "answer": "The indexed papers do not contain enough information to answer this."
+    }
+  ]
+}
