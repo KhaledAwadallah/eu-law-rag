@@ -1,6 +1,9 @@
 # AskArxiv
 
 [![CI](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml)
+[![Live demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://askarxiv-khwgghzpnn4h25fy4c3esd.streamlit.app/)
+
+**[Try the live demo](https://askarxiv-khwgghzpnn4h25fy4c3esd.streamlit.app/)** — ask about the papers, or ask "What is the capital of Austria?" to see the grounding contract refuse a question it cannot answer from the corpus.
 
 Ask questions about a collection of ML research papers and get answers grounded in those papers, with citations — a Retrieval-Augmented Generation (RAG) pipeline built from scratch, no framework.
 
@@ -15,7 +18,7 @@ Ask questions about a collection of ML research papers and get answers grounded 
 - [x] Step 5 — grounded generation: citations `[n]`, exact-refusal contract
 - [x] Step 6 — evaluation harness: hit-rate, refusals, citations, LLM-as-judge faithfulness
 - [x] Step 7 — Gradio web app, Dockerfile, GitHub Actions CI (lint + tests + image build)
-- [x] Step 8 — deployment: Streamlit front end on Community Cloud, hosted LLM via Groq, prebuilt index
+- [x] Step 8 — deployed: Streamlit front end on Community Cloud, hosted LLM via Groq, prebuilt index
 
 ## Setup
 
