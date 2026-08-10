@@ -60,12 +60,15 @@ The image contains code and dependencies only; the vector index is mounted at ru
 
 Two front ends share one pipeline: `app.py` (Gradio, local and Docker) and `streamlit_app.py` (Streamlit, deployed). The deployed app runs the embedding model and vector search on CPU and calls a hosted OpenAI-compatible API for generation — configured entirely through environment variables, so the same code runs against local Ollama or a cloud provider without modification:
 
+To run your own instance, set these in the hosting platform (Streamlit Cloud: *Advanced settings → Secrets*):
+
 | Setting | Deployed value | Type |
 |---|---|---|
 | `LLM_BASE_URL` | `https://api.groq.com/openai/v1` | variable |
 | `LLM_MODEL` | `openai/gpt-oss-120b` | variable |
-| `EMBEDDING_DEVICE` | `cpu` | variable |
-| `LLM_API_KEY` | your key | **secret** |
+| `LLM_API_KEY` | your provider key | **secret** |
+
+(`EMBEDDING_DEVICE` is available to force `cpu` where CUDA is detected but unusable; unnecessary on CPU-only hosts.)
 
 The prebuilt Chroma index (~30 MB) is committed so the deployed app never has to run ingestion; the API key lives in the platform's secret store and never enters version control.
 
