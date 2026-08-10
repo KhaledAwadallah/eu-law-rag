@@ -7,6 +7,9 @@ CHUNK_OVERLAP = 150   # characters shared between consecutive chunks
 # --- Retrieval ---
 TOP_K = 5             # how many chunks are retrieved per question
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"   # small, strong, runs on CPU
+# None = let sentence-transformers pick (GPU locally). Set EMBEDDING_DEVICE=cpu
+# where CUDA is detected but not usable, e.g. inside a ZeroGPU container.
+EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE") or None
 
 # --- Storage ---
 DB_PATH = "data/chroma"        # ChromaDB persistence directory

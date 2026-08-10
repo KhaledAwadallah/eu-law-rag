@@ -3,6 +3,7 @@ pymupdf
 sentence-transformers
 chromadb
 gradio
+streamlit
 fastapi
 uvicorn
 pytest

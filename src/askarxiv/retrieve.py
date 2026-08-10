@@ -23,7 +23,7 @@ QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 @lru_cache(maxsize=1)
 def _model() -> SentenceTransformer:
     """Load the embedding model once and reuse it across calls."""
-    return SentenceTransformer(config.EMBEDDING_MODEL)
+    return SentenceTransformer(config.EMBEDDING_MODEL, device=config.EMBEDDING_DEVICE)
 
 
 @lru_cache(maxsize=1)

@@ -1,12 +1,19 @@
 # Virtual environment — machine-specific, recreated from requirements.txt
 .venv/
 
-# Data — PDFs and the vector DB are too big for git and reproducible from code
-data/
+# Data — PDFs and extracted text are large and reproducible by re-running
+# ingestion, so they stay out. The vector index is the exception: the deployed
+# app needs it at runtime and cannot rebuild it (~30 MB, well under GitHub's limit).
+data/*
+!data/chroma/
 
 # Hugging Face model cache (Docker volume mount) — model weights, plus
 # symlinks that Windows git cannot index
 .hfcache/
+
+# Generated deployment package (rebuilt by deploy/build_space.py; contains a
+# copy of the 30 MB index). It lives in the Space's own git repo, not this one.
+deploy/space/
 
 # Secrets — API keys live here, never in git
 .env

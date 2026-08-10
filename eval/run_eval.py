@@ -26,6 +26,12 @@ from askarxiv.generate import REFUSAL, answer, call_llm, format_context
 QUESTIONS_FILE = pathlib.Path(__file__).parent / "questions.jsonl"
 RESULTS_DIR = pathlib.Path(__file__).parent / "results"
 
+# Citation markers vary by model: [1] (ASCII), 【3】 (full-width), and
+# 【1†L1-L3】 (full-width with a line-range annotation, seen from gpt-oss-120b).
+# Requiring "digit immediately followed by a closing bracket" under-counts the
+# last form, so allow a short annotation between the number and the bracket.
+CITATION_PATTERN = r"[\[【]\d+[^\[\]【】]{0,30}[\]】]"
+
 JUDGE_TEMPLATE = """You are grading a research assistant's answer against its sources.
 
 Excerpts the assistant was given:
@@ -76,7 +82,7 @@ def evaluate(k: int, use_llm: bool) -> tuple[list[dict], dict]:
             result = answer(q["question"], k=k)
             text = result["answer"]
             row["refused"] = REFUSAL in text
-            row["cited"] = bool(re.search(r"\[\d+\]", text))
+            row["cited"] = bool(re.search(CITATION_PATTERN, text))
             if q["answerable"] and not row["refused"]:
                 label, score = judge_faithfulness(
                     format_context(result["sources"]), text)

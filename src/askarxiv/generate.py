@@ -12,9 +12,16 @@ Command line with an example prompt:
 import json
 import os
 import sys
+import time
+import urllib.error
 import urllib.request
 
 from askarxiv import config
+
+# Transient HTTP failures worth retrying: rate limiting and server-side errors.
+# A 400/401/404 is our mistake and will never succeed on retry.
+RETRY_CODES = {429, 500, 502, 503, 504}
+MAX_RETRIES = 6
 
 REFUSAL = "The indexed papers do not contain enough information to answer this."
 
@@ -53,7 +60,13 @@ def call_llm(prompt: str,
         "temperature": config.LLM_TEMPERATURE,
         "stream": False,
     }
-    headers = {"Content-Type": "application/json"}
+    # Some hosted providers sit behind bot protection that rejects Python's
+    # default user agent with 403, so identify the client explicitly.
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "askarxiv/0.1",
+        "Accept": "application/json",
+    }
     api_key = os.environ.get(config.LLM_API_KEY_ENV)
     if api_key:                       # hosted providers need it; local models don't
         headers["Authorization"] = f"Bearer {api_key}"
@@ -64,9 +77,21 @@ def call_llm(prompt: str,
         headers=headers,
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=300) as resp:
-        data = json.loads(resp.read())
-    return data["choices"][0]["message"]["content"].strip()
+    for attempt in range(MAX_RETRIES):
+        try:
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                data = json.loads(resp.read())
+            return data["choices"][0]["message"]["content"].strip()
+        except urllib.error.HTTPError as e:
+            if e.code not in RETRY_CODES or attempt == MAX_RETRIES - 1:
+                raise
+            # Honour the server's own advice when it gives some, otherwise
+            # back off exponentially: 2, 4, 8, 16, 32 seconds.
+            wait = float(e.headers.get("Retry-After") or 2 ** (attempt + 1))
+            print(f"  [{e.code}] retrying in {wait:.0f}s "
+                  f"(attempt {attempt + 1}/{MAX_RETRIES})", file=sys.stderr)
+            time.sleep(wait)
+    raise RuntimeError("unreachable")   # loop either returns or raises
 
 
 def answer(question: str, k: int = config.TOP_K) -> dict:

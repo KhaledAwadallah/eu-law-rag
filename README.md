@@ -15,7 +15,7 @@ Ask questions about a collection of ML research papers and get answers grounded 
 - [x] Step 5 — grounded generation: citations `[n]`, exact-refusal contract
 - [x] Step 6 — evaluation harness: hit-rate, refusals, citations, LLM-as-judge faithfulness
 - [x] Step 7 — Gradio web app, Dockerfile, GitHub Actions CI (lint + tests + image build)
-- [ ] Step 8 — deployment (Hugging Face Spaces)
+- [x] Step 8 — deployment: Streamlit front end on Community Cloud, hosted LLM via Groq, prebuilt index
 
 ## Setup
 
@@ -38,7 +38,8 @@ python -m askarxiv.generate "your question"    # full RAG answer with sources
 ## Web app
 
 ```powershell
-python app.py        # -> http://localhost:7860 (Ollama must be running)
+python app.py                        # Gradio -> http://localhost:7860
+streamlit run streamlit_app.py       # Streamlit -> http://localhost:8501
 ```
 
 Question box, adjustable retrieval depth, answers with `[n]` citations linked to the arXiv pages of the source papers. Try "What is the capital of Austria?" to see the refusal contract in action.
@@ -51,6 +52,21 @@ docker run -p 7860:7860 -v "${PWD}/data:/app/data" -e LLM_BASE_URL=http://host.d
 ```
 
 The image contains code and dependencies only; the vector index is mounted at runtime (`-v`), and the LLM endpoint is injected via environment (`-e`) — inside a container, `host.docker.internal` reaches the Ollama server on your host machine.
+
+## Deployment
+
+Two front ends share one pipeline: `app.py` (Gradio, local and Docker) and `streamlit_app.py` (Streamlit, deployed). The deployed app runs the embedding model and vector search on CPU and calls a hosted OpenAI-compatible API for generation — configured entirely through environment variables, so the same code runs against local Ollama or a cloud provider without modification:
+
+| Setting | Deployed value | Type |
+|---|---|---|
+| `LLM_BASE_URL` | `https://api.groq.com/openai/v1` | variable |
+| `LLM_MODEL` | `openai/gpt-oss-120b` | variable |
+| `EMBEDDING_DEVICE` | `cpu` | variable |
+| `LLM_API_KEY` | your key | **secret** |
+
+The prebuilt Chroma index (~30 MB) is committed so the deployed app never has to run ingestion; the API key lives in the platform's secret store and never enters version control.
+
+A packaging script for Hugging Face Spaces is also included (`python deploy\build_space.py` → a self-contained `deploy/space/` with the package promoted to top level, the index bundled, and runtime-only dependencies). Hugging Face restricted Gradio and Docker Spaces to paid plans in 2026, so Streamlit Community Cloud is the free deployment path; the Space package remains ready if that changes.
 
 ## Evaluation
 
@@ -66,13 +82,27 @@ Metrics: retrieval hit-rate@k, false-refusal rate, refusal accuracy on traps, ci
 
 ### Results
 
+**Retrieval depth sweep** (local `gpt-oss:20b` via Ollama):
+
 | Run | k | Chunk size | Hit-rate | False refusals | Refusal acc. | Citation rate | Faithfulness |
 |---|---|---|---|---|---|---|---|
-| k3 | 3 | 1000 | 1.00 | 0.00 | 1.00 | 0.93 | 0.94 |
-| baseline | 5 | 1000 | 1.00 | 0.04 | 1.00 | 0.88 | 0.94 |
-| k10 | 10 | 1000 | 1.00 | 0.00 | 1.00 | 0.93 | 0.93 |
+| k3 | 3 | 1000 | 1.00 | 0.00 | 1.00 | 1.00 | 0.94 |
+| baseline | 5 | 1000 | 1.00 | 0.04 | 1.00 | 1.00 | 0.94 |
+| k10 | 10 | 1000 | 1.00 | 0.00 | 1.00 | 1.00 | 0.93 |
 
-LLM: `gpt-oss:20b` (local, Ollama). **Findings:** (1) Refusal accuracy is 1.00 in every run — 15/15 trap questions refused across three runs, including in-domain ML questions the model knows but the corpus doesn't contain; the grounding contract holds against the model's own knowledge. (2) Retrieval depth has no measurable effect between k=3 and k=10; with 27 answerable questions, one verdict flip moves a metric by ~4 points, so all observed differences are within benchmark noise (generation at temperature 0.2 adds run-to-run variance). (3) Two questions are consistently judged PARTIAL across all runs — systematic cases identified for error analysis.
+**Model comparison** (k=5, identical corpus, index and prompt):
+
+| Model | Host | False refusals | Refusal acc. | Citation rate | Faithfulness |
+|---|---|---|---|---|---|
+| `gpt-oss:20b` | local (Ollama, RTX 5070 Ti) | 0.04 | 1.00 | 1.00 | 0.94 |
+| `openai/gpt-oss-120b` | Groq (free tier) | 0.00 | 1.00 | 1.00 | 0.94 |
+
+**Findings**
+
+1. **Refusal accuracy is 1.00 in every run** — 20/20 trap questions refused across four runs and two models, including in-domain ML questions the models demonstrably know but the corpus doesn't contain. The grounding contract holds against the model's own knowledge.
+2. **Retrieval depth has no measurable effect between k=3 and k=10.** With 27 answerable questions, one verdict flip moves a metric by ~4 points, so all observed differences sit within benchmark noise (generation at temperature 0.2 adds run-to-run variance).
+3. **A 6× larger model changed nothing measurable.** Hosted `gpt-oss-120b` matched the local 20B on every metric, suggesting the ceiling here is set by retrieval and prompt design rather than model capacity — and justifying a free-tier model for the public demo.
+4. **The citation metric was under-reporting, caught by error analysis.** Models cite in different formats: `[1]`, `【3】`, and `【1†L1-L3】`. The original pattern required a digit immediately followed by a closing bracket, so it scored correctly-cited answers as uncited (0.67 for the 120B, 0.88 for the 20B). Because the harness stores every raw answer next to its metrics, the corrected pattern was applied retroactively to all past runs without re-running a single LLM call — the true citation rate is 1.00 throughout. A metric never checked against raw outputs is a metric not yet worth trusting.
 
 ## Configuration
 
