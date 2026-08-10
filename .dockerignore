@@ -1,0 +1,12 @@
+# Keep the build context small and secrets out of images.
+.venv/
+.git/
+data/
+.hfcache/
+eval/results/
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+.pytest_cache/
+.ruff_cache/

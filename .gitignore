@@ -4,6 +4,10 @@
 # Data — PDFs and the vector DB are too big for git and reproducible from code
 data/
 
+# Hugging Face model cache (Docker volume mount) — model weights, plus
+# symlinks that Windows git cannot index
+.hfcache/
+
 # Secrets — API keys live here, never in git
 .env
 

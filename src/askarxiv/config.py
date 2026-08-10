@@ -1,3 +1,5 @@
+import os
+
 # --- Chunking ---
 CHUNK_SIZE = 1000     # characters per chunk; ~200 words
 CHUNK_OVERLAP = 150   # characters shared between consecutive chunks
@@ -22,9 +24,10 @@ N_PAPERS = 50
 MAX_CHUNKS_PER_PAPER = 2   # cap per paper in top-k so answers cite multiple sources
 
 # --- Generation ---
-# Any OpenAI-compatible endpoint works: Ollama locally (below), or a hosted
-# provider (e.g. Groq) by changing base URL + model and setting LLM_API_KEY.
-LLM_BASE_URL = "http://localhost:11434/v1"   # Ollama's OpenAI-compatible API
-LLM_MODEL = "gpt-oss:20b"
+# Any OpenAI-compatible endpoint works: Ollama locally (default), or a hosted
+# provider (e.g. Groq) via environment variables - no code change needed.
+# Env overrides matter for Docker/deployment, where config arrives from outside.
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1")
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-oss:20b")
 LLM_API_KEY_ENV = "LLM_API_KEY"              # name of the env var holding the key
 LLM_TEMPERATURE = 0.2                        # low = factual, less creative drift

@@ -1,5 +1,7 @@
 # AskArxiv
 
+[![CI](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml)
+
 Ask questions about a collection of ML research papers and get answers grounded in those papers, with citations — a Retrieval-Augmented Generation (RAG) pipeline built from scratch, no framework.
 
 **Pipeline:** arXiv ingestion → PDF parsing → sliding-window chunking → embeddings (`bge-small-en-v1.5`) → ChromaDB vector search with per-paper diversity cap → grounded generation with citations and refusal (local `gpt-oss:20b` via Ollama, or any OpenAI-compatible endpoint) → quantitative evaluation harness.
@@ -12,7 +14,7 @@ Ask questions about a collection of ML research papers and get answers grounded 
 - [x] Step 4 — embedding + vector index (ChromaDB, cosine, HNSW)
 - [x] Step 5 — grounded generation: citations `[n]`, exact-refusal contract
 - [x] Step 6 — evaluation harness: hit-rate, refusals, citations, LLM-as-judge faithfulness
-- [ ] Step 7 — Gradio app, Docker, CI
+- [x] Step 7 — Gradio web app, Dockerfile, GitHub Actions CI (lint + tests + image build)
 - [ ] Step 8 — deployment (Hugging Face Spaces)
 
 ## Setup
@@ -32,6 +34,23 @@ python -m askarxiv.index                   # embed + build the vector index
 python -m askarxiv.retrieve "your question"    # inspect raw retrieval
 python -m askarxiv.generate "your question"    # full RAG answer with sources
 ```
+
+## Web app
+
+```powershell
+python app.py        # -> http://localhost:7860 (Ollama must be running)
+```
+
+Question box, adjustable retrieval depth, answers with `[n]` citations linked to the arXiv pages of the source papers. Try "What is the capital of Austria?" to see the refusal contract in action.
+
+## Docker
+
+```powershell
+docker build -t askarxiv .
+docker run -p 7860:7860 -v "${PWD}/data:/app/data" -e LLM_BASE_URL=http://host.docker.internal:11434/v1 askarxiv
+```
+
+The image contains code and dependencies only; the vector index is mounted at runtime (`-v`), and the LLM endpoint is injected via environment (`-e`) — inside a container, `host.docker.internal` reaches the Ollama server on your host machine.
 
 ## Evaluation
 
