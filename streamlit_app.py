@@ -1,8 +1,5 @@
 """Streamlit web UI - deployment target for Streamlit Community Cloud.
 
-Same pipeline as app.py (Gradio); a second front end because Community Cloud
-hosts Streamlit apps for free while Gradio Spaces now require a paid plan.
-
 Run locally:  streamlit run streamlit_app.py
 """
 
