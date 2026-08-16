@@ -1,6 +1,9 @@
 # EU AI Act & GDPR — grounded question answering
 
 [![CI](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml)
+[![Live demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://eu-law-rag-o7k3yvaafngnv6ljlkxg6h.streamlit.app/)
+
+**[Try the live demo](https://eu-law-rag-o7k3yvaafngnv6ljlkxg6h.streamlit.app/)** — ask when an AI system counts as high-risk, or ask *"What is the capital of Austria?"* to watch the grounding contract refuse a question it cannot answer from the regulations.
 
 Ask a question about EU tech regulation, get an answer grounded in the legal text, cited to the exact article and deep-linked to it on EUR-Lex. A RAG pipeline built from scratch, no framework.
 
@@ -88,7 +91,7 @@ k=5, local `gpt-oss:20b`, 32 questions (`eval/results/k5.json`):
 | **Refusal accuracy** | **0.83** | **5/6 — one trap broke the grounding contract** |
 | Citation rate | 1.00 | |
 | **Misattribution rate** | **0.03** | 1/32 |
-| Faithfulness | 0.96 | self-judged, see limitations |
+| Faithfulness | 0.96 | judged by the same model that generated, so an upper bound |
 
 ### Findings
 
@@ -101,15 +104,6 @@ An explicit prompt rule against this was added and **measured as ineffective** �
 **3. Cross-regulation bleed causes both PARTIAL verdicts.** *"What conditions must consent meet?"* retrieves GDPR Article 7 in the top three and AI Act Article 61 (consent for real-world testing) in slots 4-5, and the answer merges the two. Finding 1 in a milder form.
 
 **4. The citation metric was under-reporting, caught by error analysis.** Models cite as `[1]`, `【3】` or `【1†L1-L3】`; the original pattern scored the last form as uncited. Because raw answers are stored, the fix was applied retroactively without re-running a single LLM call.
-
-### Limitations
-
-- **The judge is the model judging itself**, so faithfulness is an upper bound. Using a different judge is a config change, not a code change.
-- **Faithfulness never scores traps** — exactly where finding 1 lives. Hence the separate string-match misattribution metric.
-- **No answer-correctness metric.** Gold answers sit unused in each question's `note` field; faithfulness measures grounding, not rightness.
-- **No retrieval baseline** — no BM25 floor, no reranker to compare against the reserved-slot heuristic.
-- **HNSW is approximate**, so rebuilding the index can move a borderline result. Metrics are stable; rankings are not bit-reproducible.
-- **Consolidated text only** — no amendments, case law or national implementations.
 
 ## Tests
 
