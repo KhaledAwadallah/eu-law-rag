@@ -1,16 +1,11 @@
-"""Evaluation harness: score the RAG pipeline on eval/questions.jsonl.
+"""Score the pipeline on eval/questions.jsonl.
 
-Metrics:
-    retrieval hit-rate   did the expected paper appear in the top-k? (no LLM needed)
-    false refusals       answerable questions the system wrongly refused
-    refusal accuracy     trap questions the system correctly refused
-    citation rate        answered questions containing [n] citations
-    faithfulness         LLM-as-judge: are the answer's claims supported by the excerpts?
+Metrics: retrieval and provision hit-rate, false refusals, refusal accuracy on
+traps, citation rate, misattribution, and LLM-judged faithfulness.
 
-Usage (from the project root, Ollama running unless --no-llm):
-    python eval/run_eval.py                     # full evaluation, results named by k
+    python eval/run_eval.py                     # full run
     python eval/run_eval.py --no-llm            # retrieval metrics only, fast
-    python eval/run_eval.py --k 10 --name k10   # experiment: different retrieval depth
+    python eval/run_eval.py --k 10 --name k10   # try another retrieval depth
 """
 
 import argparse
@@ -18,19 +13,29 @@ import json
 import pathlib
 import re
 import statistics
+import sys
 import time
 
-from askarxiv import config
-from askarxiv.generate import REFUSAL, answer, call_llm, format_context
+from eulaw import config
+from eulaw.generate import REFUSAL, answer, call_llm, format_context
 
 QUESTIONS_FILE = pathlib.Path(__file__).parent / "questions.jsonl"
 RESULTS_DIR = pathlib.Path(__file__).parent / "results"
 
-# Citation markers vary by model: [1] (ASCII), 【3】 (full-width), and
-# 【1†L1-L3】 (full-width with a line-range annotation, seen from gpt-oss-120b).
-# Requiring "digit immediately followed by a closing bracket" under-counts the
-# last form, so allow a short annotation between the number and the bracket.
+# Models cite as [1], 【3】 or 【1†L1-L3】. Requiring a digit immediately before
+# the closing bracket under-counted the last form, so allow an annotation.
 CITATION_PATTERN = r"[\[【]\d+[^\[\]【】]{0,30}[\]】]"
+
+# EU instruments absent from the corpus. An answer asserting what one of these
+# requires is relabelling corpus text as a law it never saw.
+FOREIGN_INSTRUMENTS = (
+    "Cyber Resilience Act",
+    "Digital Services Act",
+    "Digital Markets Act",
+    "Data Governance Act",
+    "NIS2",
+    "ePrivacy",
+)
 
 JUDGE_TEMPLATE = """You are grading a research assistant's answer against its sources.
 
@@ -53,13 +58,17 @@ def load_questions(path: pathlib.Path = QUESTIONS_FILE) -> list[dict]:
 
 
 def parse_verdict(reply: str) -> tuple[str, float]:
-    """Map the judge's reply to (label, score). Order matters:
-    'SUPPORTED' is a substring of 'UNSUPPORTED', so test the longer word first."""
+    """Order matters: 'SUPPORTED' is a substring of 'UNSUPPORTED'."""
     text = reply.strip().upper()
     for label, score in (("UNSUPPORTED", 0.0), ("PARTIAL", 0.5), ("SUPPORTED", 1.0)):
         if label in text:
             return label, score
     return "UNPARSEABLE", 0.0
+
+
+def misattributed(text: str) -> list[str]:
+    """A plain string check, so it cannot inherit the generator's blind spots."""
+    return [name for name in FOREIGN_INSTRUMENTS if name.lower() in text.lower()]
 
 
 def judge_faithfulness(context: str, answer_text: str) -> tuple[str, float]:
@@ -68,21 +77,32 @@ def judge_faithfulness(context: str, answer_text: str) -> tuple[str, float]:
 
 
 def evaluate(k: int, use_llm: bool) -> tuple[list[dict], dict]:
-    from askarxiv.retrieve import retrieve
+    from eulaw.retrieve import retrieve
 
     rows = []
     for q in load_questions():
         hits = retrieve(q["question"], k=k)
-        retrieved_ids = {h["paper_id"] for h in hits}
         row = {"id": q["id"], "answerable": q["answerable"]}
+
         if q["answerable"]:
-            row["retrieval_hit"] = bool(set(q["source_ids"]) & retrieved_ids)
+            row["retrieval_hit"] = bool(set(q["source_ids"]) &
+                                        {h["doc_id"] for h in hits})
+            # Document-level is trivial with two regulations; score the provision.
+            if q.get("source_labels"):
+                row["provision_hit"] = bool(set(q["source_labels"]) &
+                                            {h["label"] for h in hits})
+
+        # Keep the excerpts, not just the score: re-analysis then costs no
+        # further LLM calls.
+        row["sources"] = [{"doc_id": h["doc_id"], "label": h["label"],
+                           "score": h["score"]} for h in hits]
 
         if use_llm:
             result = answer(q["question"], k=k)
             text = result["answer"]
             row["refused"] = REFUSAL in text
             row["cited"] = bool(re.search(CITATION_PATTERN, text))
+            row["misattributed"] = misattributed(text)
             if q["answerable"] and not row["refused"]:
                 label, score = judge_faithfulness(
                     format_context(result["sources"]), text)
@@ -91,9 +111,14 @@ def evaluate(k: int, use_llm: bool) -> tuple[list[dict], dict]:
 
         rows.append(row)
         status = "hit " if row.get("retrieval_hit") else ("miss" if q["answerable"] else "trap")
-        print(f"{q['id']} [{status}] refused={row.get('refused', '-')} "
-              f"verdict={row.get('verdict', '-')}")
+        print(f"{q['id']} [{status}] provision={row.get('provision_hit', '-')} "
+              f"refused={row.get('refused', '-')} verdict={row.get('verdict', '-')} "
+              f"misattr={row.get('misattributed', '-')}")
     return rows, summarize(rows, k, use_llm)
+
+
+def _mean(values: list) -> float | None:
+    return statistics.mean(values) if values else None
 
 
 def summarize(rows: list[dict], k: int, use_llm: bool) -> dict:
@@ -105,35 +130,42 @@ def summarize(rows: list[dict], k: int, use_llm: bool) -> dict:
         "n_questions": len(rows),
         "config": {
             "k": k,
+            "documents": [d["celex"] for d in config.DOCUMENTS],
             "chunk_size": config.CHUNK_SIZE,
             "chunk_overlap": config.CHUNK_OVERLAP,
-            "max_chunks_per_paper": config.MAX_CHUNKS_PER_PAPER,
+            "max_chunks_per_provision": config.MAX_CHUNKS_PER_PROVISION,
+            "min_primary": config.MIN_PRIMARY,
             "embedding_model": config.EMBEDDING_MODEL,
             "llm_model": config.LLM_MODEL if use_llm else None,
         },
-        "retrieval_hit_rate": statistics.mean(
-            r["retrieval_hit"] for r in answerable),
+        "retrieval_hit_rate": _mean([r["retrieval_hit"] for r in answerable]),
+        "provision_hit_rate": _mean(
+            [r["provision_hit"] for r in answerable if "provision_hit" in r]),
     }
     if use_llm:
         answered = [r for r in answerable if not r["refused"]]
         judged = [r for r in answered if "faithfulness" in r]
         summary.update({
-            "false_refusal_rate": statistics.mean(r["refused"] for r in answerable),
-            "refusal_accuracy": statistics.mean(r["refused"] for r in traps),
-            "citation_rate": statistics.mean(r["cited"] for r in answered) if answered else None,
-            "faithfulness": statistics.mean(r["faithfulness"] for r in judged) if judged else None,
+            "false_refusal_rate": _mean([r["refused"] for r in answerable]),
+            "refusal_accuracy": _mean([r["refused"] for r in traps]),
+            "citation_rate": _mean([r["cited"] for r in answered]),
+            "misattribution_rate": _mean(
+                [bool(r["misattributed"]) for r in rows]),
+            "faithfulness": _mean([r["faithfulness"] for r in judged]),
         })
     return summary
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Evaluate the AskArxiv pipeline.")
+    # Legal text has characters the Windows console cannot encode by default.
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    parser = argparse.ArgumentParser(description="Evaluate the RAG pipeline.")
     parser.add_argument("--k", type=int, default=config.TOP_K,
                         help="retrieval depth (default: config.TOP_K)")
     parser.add_argument("--no-llm", action="store_true",
                         help="retrieval metrics only; no generation or judging")
     parser.add_argument("--name", default=None,
-                        help="results file name (default: k<k> or k<k>-nollm)")
+                        help="results file name (default: k<k>)")
     args = parser.parse_args()
 
     rows, summary = evaluate(k=args.k, use_llm=not args.no_llm)

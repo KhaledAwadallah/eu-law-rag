@@ -1,172 +1,1067 @@
 {
   "summary": {
-    "timestamp": "2026-08-06 15:08",
+    "timestamp": "2026-08-16 14:03",
     "n_questions": 32,
     "config": {
       "k": 5,
+      "documents": [
+        "32024R1689",
+        "32016R0679"
+      ],
       "chunk_size": 1000,
       "chunk_overlap": 150,
-      "max_chunks_per_paper": 2,
+      "max_chunks_per_provision": 2,
+      "min_primary": 0.6,
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "llm_model": null
     },
-    "retrieval_hit_rate": 1
+    "retrieval_hit_rate": 1,
+    "provision_hit_rate": 0.9615384615384616
   },
   "rows": [
     {
       "id": "q01",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.8508
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.7998
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 31",
+          "score": 0.7988
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 28",
+          "score": 0.7743
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 83",
+          "score": 0.7242
+        }
+      ]
     },
     {
       "id": "q02",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.8351
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 51",
+          "score": 0.8275
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.8257
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 52",
+          "score": 0.8213
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 80",
+          "score": 0.7985
+        }
+      ]
     },
     {
       "id": "q03",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8009
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.7785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 4",
+          "score": 0.7736
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 50",
+          "score": 0.7727
+        }
+      ]
     },
     {
       "id": "q04",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8876
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8834
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 73",
+          "score": 0.8705
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8375
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 66",
+          "score": 0.8256
+        }
+      ]
     },
     {
       "id": "q05",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 132",
+          "score": 0.7499
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 72",
+          "score": 0.7429
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 50",
+          "score": 0.7292
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 4",
+          "score": 0.7228
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 82",
+          "score": 0.715
+        }
+      ]
     },
     {
       "id": "q06",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 101",
+          "score": 0.7988
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 53",
+          "score": 0.7893
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex XII",
+          "score": 0.7773
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex XI",
+          "score": 0.7771
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 91",
+          "score": 0.77
+        }
+      ]
     },
     {
       "id": "q07",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 7",
+          "score": 0.7931
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex III",
+          "score": 0.7919
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 80",
+          "score": 0.7773
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.7746
+        }
+      ]
     },
     {
       "id": "q08",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 99",
+          "score": 0.7418
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 169",
+          "score": 0.7412
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 99",
+          "score": 0.7397
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 101",
+          "score": 0.7304
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex II",
+          "score": 0.7219
+        }
+      ]
     },
     {
       "id": "q09",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.8652
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.8499
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 66",
+          "score": 0.8125
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 75",
+          "score": 0.8111
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 13",
+          "score": 0.7693
+        }
+      ]
     },
     {
       "id": "q10",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.8024
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 65",
+          "score": 0.7908
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.7645
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 82",
+          "score": 0.758
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 177",
+          "score": 0.7384
+        }
+      ]
     },
     {
       "id": "q11",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8934
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8671
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 93",
+          "score": 0.8622
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8484
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.8415
+        }
+      ]
     },
     {
       "id": "q12",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7671
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 96",
+          "score": 0.7604
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7164
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 28",
+          "score": 0.6866
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 77",
+          "score": 0.6842
+        }
+      ]
     },
     {
       "id": "q13",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 10",
+          "score": 0.8755
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 67",
+          "score": 0.8628
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 122",
+          "score": 0.8213
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 10",
+          "score": 0.819
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.7541
+        }
+      ]
     },
     {
       "id": "q14",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 11",
+          "score": 0.8037
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 72",
+          "score": 0.8016
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 71",
+          "score": 0.7956
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.7854
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.7794
+        }
+      ]
     },
     {
       "id": "q15",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 40",
+          "score": 0.8602
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 50",
+          "score": 0.8345
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 6",
+          "score": 0.8086
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 6",
+          "score": 0.8073
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.7881
+        }
+      ]
     },
     {
       "id": "q16",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.8627
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 87",
+          "score": 0.8229
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.8012
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 85",
+          "score": 0.7786
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.7452
+        }
+      ]
     },
     {
       "id": "q17",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.8302
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.8278
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 86",
+          "score": 0.8265
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 87",
+          "score": 0.7915
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.7517
+        }
+      ]
     },
     {
       "id": "q18",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 90",
+          "score": 0.8654
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 35",
+          "score": 0.8351
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 84",
+          "score": 0.8345
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 35",
+          "score": 0.8325
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7694
+        }
+      ]
     },
     {
       "id": "q19",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 37",
+          "score": 0.8477
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 37",
+          "score": 0.8382
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 38",
+          "score": 0.8363
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 38",
+          "score": 0.818
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 39",
+          "score": 0.7951
+        }
+      ]
     },
     {
       "id": "q20",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 17",
+          "score": 0.7692
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 17",
+          "score": 0.7484
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 66",
+          "score": 0.7324
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 65",
+          "score": 0.6857
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6792
+        }
+      ]
     },
     {
       "id": "q21",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 20",
+          "score": 0.8413
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 20",
+          "score": 0.8107
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 68",
+          "score": 0.7495
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 15",
+          "score": 0.7369
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 4",
+          "score": 0.7361
+        }
+      ]
     },
     {
       "id": "q22",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 22",
+          "score": 0.7516
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 71",
+          "score": 0.7435
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 22",
+          "score": 0.7425
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 59",
+          "score": 0.7364
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 86",
+          "score": 0.7355
+        }
+      ]
     },
     {
       "id": "q23",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.8522
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 39",
+          "score": 0.8042
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 2",
+          "score": 0.8021
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.7971
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 40",
+          "score": 0.797
+        }
+      ]
     },
     {
       "id": "q24",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 7",
+          "score": 0.7601
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 7",
+          "score": 0.7586
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 43",
+          "score": 0.7287
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 61",
+          "score": 0.7165
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 61",
+          "score": 0.7118
+        }
+      ]
     },
     {
       "id": "q25",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 95",
+          "score": 0.76
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 115",
+          "score": 0.7399
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 24",
+          "score": 0.7307
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 28",
+          "score": 0.725
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 70",
+          "score": 0.7238
+        }
+      ]
     },
     {
       "id": "q26",
       "answerable": true,
-      "retrieval_hit": true
+      "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 83",
+          "score": 0.7686
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 150",
+          "score": 0.7664
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 150",
+          "score": 0.7664
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 83",
+          "score": 0.7591
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 100",
+          "score": 0.7521
+        }
+      ]
     },
     {
       "id": "q27",
-      "answerable": true,
-      "retrieval_hit": true
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 144",
+          "score": 0.4723
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex X",
+          "score": 0.4712
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 117",
+          "score": 0.4709
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex X",
+          "score": 0.4698
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 4",
+          "score": 0.4675
+        }
+      ]
     },
     {
       "id": "q28",
-      "answerable": false
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 52",
+          "score": 0.5495
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 3",
+          "score": 0.5435
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 8",
+          "score": 0.5393
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.5195
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.5195
+        }
+      ]
     },
     {
       "id": "q29",
-      "answerable": false
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 118",
+          "score": 0.7136
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 145",
+          "score": 0.6902
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 62",
+          "score": 0.6543
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 31",
+          "score": 0.6443
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 11",
+          "score": 0.6438
+        }
+      ]
     },
     {
       "id": "q30",
-      "answerable": false
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 77",
+          "score": 0.8254
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 78",
+          "score": 0.788
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 42",
+          "score": 0.7498
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 47",
+          "score": 0.7148
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 41",
+          "score": 0.7097
+        }
+      ]
     },
     {
       "id": "q31",
-      "answerable": false
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 152",
+          "score": 0.6473
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6439
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6409
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 159",
+          "score": 0.6388
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.6239
+        }
+      ]
     },
     {
       "id": "q32",
-      "answerable": false
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 157",
+          "score": 0.5004
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 54",
+          "score": 0.4881
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 9",
+          "score": 0.474
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 9",
+          "score": 0.4503
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 36",
+          "score": 0.4426
+        }
+      ]
     }
   ]
 }

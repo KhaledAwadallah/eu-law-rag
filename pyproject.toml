@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "askarxiv"
+name = "eulaw"
 version = "0.1.0"
-description = "RAG assistant over ML research papers: retrieval, generation with citations, and quantitative evaluation"
+description = "Grounded question answering over the EU AI Act and GDPR: provision-level retrieval, cited generation, and quantitative evaluation"
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]

@@ -1,11 +1,7 @@
-arxiv==4.0.0
-pymupdf
+beautifulsoup4
 sentence-transformers
 chromadb
 gradio
 streamlit
-fastapi
-uvicorn
 pytest
 ruff
-python-dotenv

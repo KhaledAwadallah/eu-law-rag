@@ -1,121 +1,120 @@
-# AskArxiv
+# EU AI Act & GDPR — grounded question answering
 
-[![CI](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/askarxiv/actions/workflows/ci.yml)
-[![Live demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://askarxiv-khwgghzpnn4h25fy4c3esd.streamlit.app/)
+[![CI](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml)
 
-**[Try the live demo](https://askarxiv-khwgghzpnn4h25fy4c3esd.streamlit.app/)** — ask about the papers, or ask "What is the capital of Austria?" to see the grounding contract refuse a question it cannot answer from the corpus.
+Ask a question about EU tech regulation, get an answer grounded in the legal text, cited to the exact article and deep-linked to it on EUR-Lex. A RAG pipeline built from scratch, no framework.
 
-Ask questions about a collection of ML research papers and get answers grounded in those papers, with citations — a Retrieval-Augmented Generation (RAG) pipeline built from scratch, no framework.
+**Corpus:** the AI Act (Reg. 2024/1689) and the GDPR (Reg. 2016/679) in full — 578 provisions, 908k characters, 1,357 chunks.
 
-**Pipeline:** arXiv ingestion → PDF parsing → sliding-window chunking → embeddings (`bge-small-en-v1.5`) → ChromaDB vector search with per-paper diversity cap → grounded generation with citations and refusal (local `gpt-oss:20b` via Ollama, or any OpenAI-compatible endpoint) → quantitative evaluation harness.
+**Pipeline:** EUR-Lex XHTML → one chunk per provision → `bge-small-en-v1.5` embeddings → ChromaDB search under two ranking rules → grounded generation with citations and refusal (`gpt-oss:20b` via Ollama, or any OpenAI-compatible endpoint) → evaluation harness.
 
-## Status
+> **Not legal advice.** This reports what the consolidated text says; it does not track amendments, case law or national implementations.
 
-- [x] Step 1 — project scaffold, environment, tests, CI-ready structure
-- [x] Step 2 — paper ingestion (arXiv API + PyMuPDF): 50 cs.CL papers
-- [x] Step 3 — chunking: 2,414 overlapping passages (size 1000, overlap 150)
-- [x] Step 4 — embedding + vector index (ChromaDB, cosine, HNSW)
-- [x] Step 5 — grounded generation: citations `[n]`, exact-refusal contract
-- [x] Step 6 — evaluation harness: hit-rate, refusals, citations, LLM-as-judge faithfulness
-- [x] Step 7 — Gradio web app, Dockerfile, GitHub Actions CI (lint + tests + image build)
-- [x] Step 8 — deployed: Streamlit front end on Community Cloud, hosted LLM via Groq, prebuilt index
+## Why provisions
 
-## Setup
+EUR-Lex serves each regulation as XHTML where every article, recital and annex sits in a `<div>` whose id is also its page anchor (`art_6`, `rct_47`, `anx_III`). So a chunk is a provision, and a citation is a link the reader can check in one click instead of searching a 100-page document.
 
-```powershell
-.\setup.ps1          # venv, dependencies, editable install, tests, git init
-```
+Adding another regulation is one CELEX id in [config.py](src/eulaw/config.py) — e.g. the Data Act (`32023R2854`) or the DSA (`32022R2065`).
 
-Generation additionally needs [Ollama](https://ollama.com) with the model pulled: `ollama pull gpt-oss:20b`. Any OpenAI-compatible provider works instead — set `LLM_BASE_URL`/`LLM_MODEL` in `src/askarxiv/config.py` and the `LLM_API_KEY` environment variable.
+## Two ranking rules
+
+Plain top-k similarity is wrong here in two measurable ways.
+
+**Diversity is per provision, not per document.** With two regulations, capping per *document* starves the top-k instead of spreading it — k=5 returned 4 hits. AI Act Article 5 alone is 11k characters, so the unit that must not dominate is the article.
+
+**Articles outrank recitals; embeddings disagree.** Recitals are explanatory preamble written in flowing prose, so they out-embed the binding articles on plain-language questions. *"What are the lawful bases for processing personal data?"* returned five recitals and no GDPR Article 6 — the provision that answers it — which sat at candidate rank 5. Fix: reserve 60% of the top-k for articles and annexes, then fill by score. No reranker.
+
+## The code
+
+Seven files, 361 lines of executable code, one per pipeline stage:
+
+| file | what it does |
+|---|---|
+| [config.py](src/eulaw/config.py) | every setting: CELEX ids, chunk size, top-k, ranking rules, LLM endpoint, UI copy |
+| [corpus.py](src/eulaw/corpus.py) | download from EUR-Lex, split into articles, recitals and annexes |
+| [chunk.py](src/eulaw/chunk.py) | one chunk per provision, splitting only those too long to fit |
+| [index.py](src/eulaw/index.py) | embed into ChromaDB |
+| [retrieve.py](src/eulaw/retrieve.py) | vector search plus the two ranking rules |
+| [generate.py](src/eulaw/generate.py) | prompt → LLM → answer with sources |
+
+Plus `app.py` and `streamlit_app.py` (two front ends over the same `answer()` call) and `eval/run_eval.py`.
 
 ## Usage
 
 ```powershell
-python -m askarxiv.ingest                  # download + parse the corpus
-python -m askarxiv.chunk                   # split into overlapping passages
-python -m askarxiv.index                   # embed + build the vector index
-python -m askarxiv.retrieve "your question"    # inspect raw retrieval
-python -m askarxiv.generate "your question"    # full RAG answer with sources
+.\setup.ps1                                 # venv, dependencies, tests
+python -m eulaw.corpus                      # download + parse from EUR-Lex
+python -m eulaw.chunk                       # one chunk per provision
+python -m eulaw.index                       # embed + build the index
+python -m eulaw.retrieve "your question"    # inspect raw retrieval
+python -m eulaw.generate "your question"    # full answer with sources
 ```
 
-## Web app
+The prebuilt index ships in the repo, so the app and the retrieval evaluation run straight after install. Generation needs [Ollama](https://ollama.com) (`ollama pull gpt-oss:20b`) or any OpenAI-compatible provider via `LLM_BASE_URL` / `LLM_MODEL` / `LLM_API_KEY`.
 
 ```powershell
-python app.py                        # Gradio -> http://localhost:7860
+python app.py                        # Gradio  -> http://localhost:7860
 streamlit run streamlit_app.py       # Streamlit -> http://localhost:8501
+
+docker build -t eu-law-rag .
+docker run -p 7860:7860 -v "${PWD}/data:/app/data" -e LLM_BASE_URL=http://host.docker.internal:11434/v1 eu-law-rag
 ```
 
-Question box, adjustable retrieval depth, answers with `[n]` citations linked to the arXiv pages of the source papers. Try "What is the capital of Austria?" to see the refusal contract in action.
-
-## Docker
-
-```powershell
-docker build -t askarxiv .
-docker run -p 7860:7860 -v "${PWD}/data:/app/data" -e LLM_BASE_URL=http://host.docker.internal:11434/v1 askarxiv
-```
-
-The image contains code and dependencies only; the vector index is mounted at runtime (`-v`), and the LLM endpoint is injected via environment (`-e`) — inside a container, `host.docker.internal` reaches the Ollama server on your host machine.
-
-## Deployment
-
-Two front ends share one pipeline: `app.py` (Gradio, local and Docker) and `streamlit_app.py` (Streamlit, deployed). The deployed app runs the embedding model and vector search on CPU and calls a hosted OpenAI-compatible API for generation — configured entirely through environment variables, so the same code runs against local Ollama or a cloud provider without modification:
-
-To run your own instance, set these in the hosting platform (Streamlit Cloud: *Advanced settings → Secrets*):
-
-| Setting | Deployed value | Type |
-|---|---|---|
-| `LLM_BASE_URL` | `https://api.groq.com/openai/v1` | variable |
-| `LLM_MODEL` | `openai/gpt-oss-120b` | variable |
-| `LLM_API_KEY` | your provider key | **secret** |
-
-(`EMBEDDING_DEVICE` is available to force `cpu` where CUDA is detected but unusable; unnecessary on CPU-only hosts.)
-
-The prebuilt Chroma index (~30 MB) is committed so the deployed app never has to run ingestion; the API key lives in the platform's secret store and never enters version control.
-
-A packaging script for Hugging Face Spaces is also included (`python deploy\build_space.py` → a self-contained `deploy/space/` with the package promoted to top level, the index bundled, and runtime-only dependencies). Hugging Face restricted Gradio and Docker Spaces to paid plans in 2026, so Streamlit Community Cloud is the free deployment path; the Space package remains ready if that changes.
+Deployed on Streamlit Community Cloud: embeddings and search on CPU, generation via a hosted API. Set `LLM_BASE_URL`, `LLM_MODEL` and the `LLM_API_KEY` **secret** in the platform; the index is committed so the app never runs ingestion.
 
 ## Evaluation
 
-A 32-question benchmark (`eval/questions.jsonl`) hand-written against the actual corpus: 27 answerable questions tagged with their source paper, plus 5 trap questions with no answer in the corpus (including ML questions the model knows but the papers don't cover — leak detectors for the grounding contract).
+32 hand-written questions (`eval/questions.jsonl`): 26 answerable, each tagged with the exact provision that answers it, plus 6 traps with no answer in the corpus.
+
+The traps are leak detectors, not softballs. Two ask about the **Digital Services Act** and the **Cyber Resilience Act** — EU regulation the model knows well, in the same register as the corpus, but absent from it.
 
 ```powershell
 python eval\run_eval.py --no-llm           # retrieval metrics only (fast)
-python eval\run_eval.py                    # full run incl. LLM-as-judge faithfulness
-python eval\run_eval.py --k 10 --name k10  # experiments at different retrieval depth
+python eval\run_eval.py                    # full run incl. LLM-as-judge
+python eval\run_eval.py --k 10 --name k10  # other retrieval depths
 ```
 
-Metrics: retrieval hit-rate@k, false-refusal rate, refusal accuracy on traps, citation rate, and faithfulness (the local LLM judges whether each answer is supported by its excerpts — checked UNSUPPORTED/PARTIAL/SUPPORTED). Results are saved to `eval/results/*.json` with a full config snapshot for reproducibility.
+Each run stores every answer *and the excerpts behind it*, so re-analysis costs no further LLM calls.
 
 ### Results
 
-**Retrieval depth sweep** (local `gpt-oss:20b` via Ollama):
+k=5, local `gpt-oss:20b`, 32 questions (`eval/results/k5.json`):
 
-| Run | k | Chunk size | Hit-rate | False refusals | Refusal acc. | Citation rate | Faithfulness |
-|---|---|---|---|---|---|---|---|
-| k3 | 3 | 1000 | 1.00 | 0.00 | 1.00 | 1.00 | 0.94 |
-| baseline | 5 | 1000 | 1.00 | 0.04 | 1.00 | 1.00 | 0.94 |
-| k10 | 10 | 1000 | 1.00 | 0.00 | 1.00 | 1.00 | 0.93 |
+| Metric | Value | |
+|---|---|---|
+| Document hit-rate | 1.00 | saturated by construction — only two documents |
+| **Provision hit-rate** | **0.96** | 25/26 |
+| False refusals | 0.00 | all 26 answerable questions answered |
+| **Refusal accuracy** | **0.83** | **5/6 — one trap broke the grounding contract** |
+| Citation rate | 1.00 | |
+| **Misattribution rate** | **0.03** | 1/32 |
+| Faithfulness | 0.96 | self-judged, see limitations |
 
-**Model comparison** (k=5, identical corpus, index and prompt):
+### Findings
 
-| Model | Host | False refusals | Refusal acc. | Citation rate | Faithfulness |
-|---|---|---|---|---|---|
-| `gpt-oss:20b` | local (Ollama, RTX 5070 Ti) | 0.04 | 1.00 | 1.00 | 0.94 |
-| `openai/gpt-oss-120b` | Groq (free tier) | 0.00 | 1.00 | 1.00 | 0.94 |
+**1. One trap breaks the contract, and prompting does not fix it.** Asked what the **Cyber Resilience Act** requires, the system does not refuse. Retrieval hands it AI Act Recitals 77-78 and Articles 41/42/47 — all genuinely about conformity assessment and cybersecurity — and it answers *"The EU Cyber Resilience Act requires that products with digital elements undergo a conformity assessment…"*. Every excerpt is real and every claim appears in the sources; only the law it is attributed to is invented.
 
-**Findings**
+An explicit prompt rule against this was added and **measured as ineffective** — the trap failed again with the same opening sentence. It is kept but documented as insufficient. The failure is specific: the neighbouring DSA trap is refused correctly, because nothing in the corpus is close enough to bridge to. The model is not disobeying an instruction; it fails to notice that "the Act" in its excerpts and "the Act" in the question are different laws. A deterministic guard — running the `misattribution` check at answer time and forcing a refusal — is the honest fix.
 
-1. **Refusal accuracy is 1.00 in every run** — 20/20 trap questions refused across four runs and two models, including in-domain ML questions the models demonstrably know but the corpus doesn't contain. The grounding contract holds against the model's own knowledge.
-2. **Retrieval depth has no measurable effect between k=3 and k=10.** With 27 answerable questions, one verdict flip moves a metric by ~4 points, so all observed differences sit within benchmark noise (generation at temperature 0.2 adds run-to-run variance).
-3. **A 6× larger model changed nothing measurable.** Hosted `gpt-oss-120b` matched the local 20B on every metric, suggesting the ceiling here is set by retrieval and prompt design rather than model capacity — and justifying a free-tier model for the public demo.
-4. **The citation metric was under-reporting, caught by error analysis.** Models cite in different formats: `[1]`, `【3】`, and `【1†L1-L3】`. The original pattern required a digit immediately followed by a closing bracket, so it scored correctly-cited answers as uncited (0.67 for the 120B, 0.88 for the 20B). Because the harness stores every raw answer next to its metrics, the corrected pattern was applied retroactively to all past runs without re-running a single LLM call — the true citation rate is 1.00 throughout. A metric never checked against raw outputs is a metric not yet worth trusting.
+**2. Provision hit-rate is the only retrieval metric with headroom.** Document hit-rate cannot be other than 1.00 with two documents. One question misses at provision level: *"What security measures must controllers and processors implement?"* returns GDPR Recital 95 and Articles 24/28/70 but not Article 32, titled *Security of processing*. The gold label was verified — a genuine retrieval failure.
 
-## Configuration
+**3. Cross-regulation bleed causes both PARTIAL verdicts.** *"What conditions must consent meet?"* retrieves GDPR Article 7 in the top three and AI Act Article 61 (consent for real-world testing) in slots 4-5, and the answer merges the two. Finding 1 in a milder form.
 
-Every pipeline knob (chunk size/overlap, top-k, diversity cap, embedding model, corpus query, LLM endpoint) lives in `src/askarxiv/config.py`.
+**4. The citation metric was under-reporting, caught by error analysis.** Models cite as `[1]`, `【3】` or `【1†L1-L3】`; the original pattern scored the last form as uncited. Because raw answers are stored, the fix was applied retroactively without re-running a single LLM call.
+
+### Limitations
+
+- **The judge is the model judging itself**, so faithfulness is an upper bound. Using a different judge is a config change, not a code change.
+- **Faithfulness never scores traps** — exactly where finding 1 lives. Hence the separate string-match misattribution metric.
+- **No answer-correctness metric.** Gold answers sit unused in each question's `note` field; faithfulness measures grounding, not rightness.
+- **No retrieval baseline** — no BM25 floor, no reranker to compare against the reserved-slot heuristic.
+- **HNSW is approximate**, so rebuilding the index can move a borderline result. Metrics are stable; rankings are not bit-reproducible.
+- **Consolidated text only** — no amendments, case law or national implementations.
 
 ## Tests
 
 ```powershell
-pytest -q
+pytest -q        # 41 tests, no network, model or index required
 ```
+
+Covering the EUR-Lex parser, provision chunking, the selection algorithm (diversity cap, reserved slots, no duplicates), prompt construction, and config/benchmark invariants.

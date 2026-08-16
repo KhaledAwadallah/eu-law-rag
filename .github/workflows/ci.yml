@@ -28,4 +28,4 @@ jobs:
         run: pytest -q
 
       - name: Docker build
-        run: docker build -t askarxiv .
+        run: docker build -t eu-law-rag .

@@ -1,4 +1,4 @@
-"""Streamlit web UI - deployment target for Streamlit Community Cloud.
+"""Streamlit UI - the deployed front end. Same pipeline as app.py.
 
 Run locally:  streamlit run streamlit_app.py
 """
@@ -8,30 +8,18 @@ import sys
 
 import streamlit as st
 
-# Streamlit Community Cloud installs requirements.txt but does not run
-# `pip install -e .`, so make the src/ layout importable explicitly.
+# Community Cloud installs requirements.txt but never runs `pip install -e .`.
 sys.path.insert(0, str(pathlib.Path(__file__).parent / "src"))
 
-from askarxiv import config  # noqa: E402  (import needs the path line above)
+from eulaw import config  # noqa: E402  (import needs the path line above)
 
-EXAMPLES = [
-    "What methods make LLM inference more efficient?",
-    "What is Salience Bias in commonsense reasoning?",
-    "How does ParliamentBench evaluate deception in LLM agents?",
-    "What is the capital of Austria?",   # demonstrates the refusal contract
-]
-
-st.set_page_config(page_title="AskArxiv", page_icon=None, layout="centered")
+st.set_page_config(page_title=config.TITLE, page_icon=None, layout="centered")
 
 
 @st.cache_resource(show_spinner="Loading the embedding model...")
 def _warm() -> bool:
-    """Load the embedding model and open the index once per server process.
-
-    Streamlit reruns the whole script on every interaction, so without this
-    cache the model would reload on each question.
-    """
-    from askarxiv.retrieve import _collection, _model
+    """Load the model and index once; Streamlit reruns the script constantly."""
+    from eulaw.retrieve import _collection, _model
 
     _model()
     _collection()
@@ -39,36 +27,49 @@ def _warm() -> bool:
 
 
 def render_sources(sources: list[dict]) -> None:
+    from eulaw.retrieve import cite
+
     st.markdown("**Sources**")
     for i, s in enumerate(sources, start=1):
-        url = f"https://arxiv.org/abs/{s['paper_id']}"
-        st.markdown(f"{i}. [{s['title']}]({url}) — chunk {s['chunk_index']}, "
-                    f"score {s['score']:.2f}")
+        st.markdown(f"{i}. [{cite(s)}]({s['url']}) — score {s['score']:.2f}")
 
 
-st.title("AskArxiv")
+def _run_example(text: str) -> None:
+    st.session_state.question = text
+    st.session_state.run = True
+
+
+def _submit() -> None:
+    st.session_state.run = True
+
+
+st.title(config.TITLE)
+st.write(config.DESCRIPTION)
 st.write(
-    "Ask questions about 50 recent LLM papers (arXiv, cs.CL). Answers are "
-    "grounded in the papers and cited; if the papers don't contain the answer, "
-    "the system says so instead of guessing."
+    "Answers are grounded in these regulations and cited; if they do not "
+    "contain the answer, the system says so instead of guessing."
 )
-
-if "question" not in st.session_state:
-    st.session_state.question = ""
+st.info(config.DISCLAIMER)
 
 st.caption("Try one of these:")
 cols = st.columns(2)
-for i, example in enumerate(EXAMPLES):
-    if cols[i % 2].button(example, use_container_width=True):
-        st.session_state.question = example
+for i, example in enumerate(config.EXAMPLES):
+    cols[i % 2].button(example, key=f"example_{i}", on_click=_run_example,
+                       args=(example,), use_container_width=True)
 
-question = st.text_input("Your question", key="question")
-k = st.slider("Retrieved chunks (k)", 3, 10, config.TOP_K)
+# A form: without it, every rerun (slider, button) would fire another
+# paid, rate-limited call to the language model.
+with st.form("ask"):
+    st.text_input("Your question", key="question")
+    k = st.slider("Retrieved provisions (k)", 3, 10, config.TOP_K)
+    st.form_submit_button("Ask", type="primary", on_click=_submit)
 
-if st.button("Ask", type="primary") or question:
-    if question.strip():
+if st.session_state.get("run"):
+    st.session_state.run = False
+    question = st.session_state.get("question", "").strip()
+    if question:
         _warm()
-        from askarxiv.generate import answer
+        from eulaw.generate import answer
 
         with st.spinner("Retrieving and generating..."):
             try:

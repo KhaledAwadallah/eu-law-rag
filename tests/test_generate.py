@@ -4,28 +4,45 @@ import io
 import json
 from unittest.mock import patch
 
-from askarxiv.generate import PROMPT_TEMPLATE, REFUSAL, call_llm, format_context
+from eulaw.generate import REFUSAL, build_prompt, call_llm, format_context
 
 
 def _chunks():
     return [
-        {"text": "alpha text", "title": "Paper A", "paper_id": "a", "chunk_index": 0, "score": 0.9},
-        {"text": "beta text", "title": "Paper B", "paper_id": "b", "chunk_index": 3, "score": 0.8},
+        {"text": "alpha text", "title": "AI Act", "doc_id": "32024R1689",
+         "label": "Article 6", "url": "https://eur-lex.europa.eu/x#art_6",
+         "chunk_index": 0, "score": 0.9},
+        {"text": "beta text", "title": "GDPR", "doc_id": "32016R0679",
+         "label": "Recital 40", "url": "https://eur-lex.europa.eu/y#rct_40",
+         "chunk_index": 3, "score": 0.8},
     ]
 
 
-def test_format_context_numbers_and_titles():
+def test_format_context_numbers_excerpts_and_names_provisions():
     ctx = format_context(_chunks())
-    assert '[1] From "Paper A":' in ctx
-    assert '[2] From "Paper B":' in ctx
+    assert '[1] From "AI Act, Article 6":' in ctx
+    assert '[2] From "GDPR, Recital 40":' in ctx
     assert "alpha text" in ctx and "beta text" in ctx
 
 
-def test_prompt_contains_rules_and_question():
-    prompt = PROMPT_TEMPLATE.format(refusal=REFUSAL, context="CTX", question="Q?")
+def test_prompt_contains_the_grounding_rules_and_question():
+    prompt = build_prompt("Q?", _chunks())
     assert REFUSAL in prompt          # refusal instruction present
     assert "ONLY" in prompt           # grounding instruction present
+    assert "Q?" in prompt
     assert prompt.rstrip().endswith("Answer:")
+
+
+def test_prompt_asks_for_provision_level_citation():
+    assert "Article 6(2) of the AI Act" in build_prompt("Q?", _chunks())
+
+
+def test_prompt_forbids_attributing_excerpts_to_another_law():
+    # Regression on the Cyber Resilience Act failure: the model answered a
+    # question about a regulation absent from the corpus by relabelling AI Act
+    # excerpts, with every individual claim genuinely present in the sources.
+    prompt = build_prompt("Q?", _chunks()).lower()
+    assert "never attribute an excerpt to a law it does not come from" in prompt
 
 
 def test_call_llm_parses_openai_response():

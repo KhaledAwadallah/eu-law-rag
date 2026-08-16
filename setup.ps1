@@ -1,4 +1,4 @@
-# setup.ps1 - one-time environment setup for AskArxiv (Windows PowerShell)
+# setup.ps1 - one-time environment setup for eulaw (Windows PowerShell)
 # Run from the project root:  powershell -ExecutionPolicy Bypass -File .\setup.ps1
 $ErrorActionPreference = "Stop"
 
@@ -34,7 +34,7 @@ Write-Host "[3/5] Installing dependencies (PyTorch is ~2 GB - this takes a while
 & .\.venv\Scripts\python.exe -m pip install -e .
 
 Write-Host "[4/5] Verifying installation..." -ForegroundColor Cyan
-& .\.venv\Scripts\python.exe -c "import chromadb, sentence_transformers, arxiv; from askarxiv import config; print('setup OK - chunk size:', config.CHUNK_SIZE)"
+& .\.venv\Scripts\python.exe -c "import chromadb, sentence_transformers; from eulaw import config; print('setup OK - chunk size:', config.CHUNK_SIZE)"
 & .\.venv\Scripts\python.exe -m pytest -q
 
 Write-Host "[5/5] Initializing git repository..." -ForegroundColor Cyan

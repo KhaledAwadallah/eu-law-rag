@@ -1,5 +1,5 @@
-# AskArxiv web app. The vector index is NOT baked into the image;
-# mount it at runtime:  docker run -v ./data:/app/data ...
+# EU AI Act & GDPR grounded-QA app. The vector index is NOT baked into the
+# image; mount it at runtime:  docker run -v ./data:/app/data ...
 FROM python:3.12-slim
 
 WORKDIR /app

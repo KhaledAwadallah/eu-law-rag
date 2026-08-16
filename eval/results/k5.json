@@ -1,326 +1,1254 @@
 {
   "summary": {
-    "timestamp": "2026-08-07 14:34",
+    "timestamp": "2026-08-15 14:27",
     "n_questions": 32,
     "config": {
       "k": 5,
+      "documents": [
+        "32024R1689",
+        "32016R0679"
+      ],
       "chunk_size": 1000,
       "chunk_overlap": 150,
-      "max_chunks_per_paper": 2,
+      "max_chunks_per_provision": 2,
+      "min_primary": 0.6,
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "llm_model": "gpt-oss:20b"
     },
     "retrieval_hit_rate": 1,
+    "provision_hit_rate": 0.9615384615384616,
     "false_refusal_rate": 0,
-    "refusal_accuracy": 1,
-    "citation_rate": 0.7037037037037037,
-    "faithfulness": 0.9629629629629629
+    "refusal_accuracy": 0.8333333333333334,
+    "citation_rate": 1,
+    "misattribution_rate": 0.03125,
+    "faithfulness": 0.9615384615384616
   },
   "rows": [
     {
       "id": "q01",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.8508
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.7998
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 31",
+          "score": 0.7988
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 28",
+          "score": 0.7743
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 83",
+          "score": 0.7242
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "The SwiGLU feed\u2011forward network (its three projection matrices) dominates memory traffic and computation during LLM inference, and the Prox framework targets this component with a training\u2011free sparsification technique. [1][5]"
+      "answer": "The AI Act outright prohibits the following practices:\n\n1. The placing on the market, putting into service or use of an AI system that deploys subliminal techniques beyond a person\u2019s consciousness or purposefully manipulative or deceptive techniques, with the objective or effect of materially distorting the behaviour of a person or group and causing significant harm.  \n2. The placing on the market, putting into service or use of an AI system that exploits any vulnerability of a natural person or a specific group (e.g., due to age, disability, or a specific social or economic situation) to materially distort that person\u2019s or group\u2019s behaviour.  \n\nThese are set out in Article\u202f5 of the AI Act. [1]"
     },
     {
       "id": "q02",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.8351
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 51",
+          "score": 0.8275
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.8257
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 52",
+          "score": 0.8213
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 80",
+          "score": 0.7985
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Prox uses the FFN intermediate state (the SwiGLU intermediate state) as the signal to rank and select channels to keep when sparsifying activations. [1][2]"
+      "answer": "An AI system is classified as high\u2011risk when:\n\n1. **Both of the following conditions are met** \u2013 the system is intended to be used as a safety component of a product or is itself a product covered by the Union harmonisation legislation listed in Annex\u202fI, **and** that product (or the AI system itself) is required to undergo a third\u2011party conformity assessment under that legislation\u30103\u3011.  \n\n2. **Any system referred to in Annex\u202fIII** is considered high\u2011risk unless a derogation applies (e.g., the system does not pose a significant risk of harm to health, safety or fundamental rights, or it performs only a narrow procedural task, etc.)\u30103\u3011\u30101\u3011.  \n\n3. **Stand\u2011alone AI systems** are also high\u2011risk if, by their intended purpose, they pose a high risk of harm to health, safety or fundamental rights and are used in the pre\u2011defined areas specified in the Regulation\u30104\u3011.  \n\n4. A market\u2011surveillance authority may re\u2011classify a system that a provider has declared non\u2011high\u2011risk as high\u2011risk if it has sufficient reason to do so\u30105\u3011."
     },
     {
       "id": "q03",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8009
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.7785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 4",
+          "score": 0.7736
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 50",
+          "score": 0.7727
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Extending the speculation horizon can hurt speedup because a longer \\(k\\) sharply lowers the acceptance rate \\(\\alpha\\), which in turn causes an \u201cefficiency inversion\u201d where the actual acceleration drops rather than rises [1].  In addition, approaches that allow flexible speculation lengths (e.g., lightweight layers) suffer a steep decline in \\(\\alpha\\) for tail tokens, further eroding performance at large \\(k\\) [2]."
+      "answer": "The AI Act requires that providers and deployers ensure that the staff and other persons who operate or use AI systems possess a sufficient level of AI literacy, competence, training and authority. Deployers must assign human oversight to natural persons who have the necessary competence, training and authority, and must provide the support needed for those persons to fulfil their duties. This obligation is set out in Article\u202f4 and Article\u202f26, and reinforced in Recital\u202f91. [4] [1] [2]"
     },
     {
       "id": "q04",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8876
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8834
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 73",
+          "score": 0.8705
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8375
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 66",
+          "score": 0.8256
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "DIRECT addresses two main issues in LLM\u2011based sequence labeling: (1) insufficient domain alignment with human preferences, and (2) low inference efficiency. [2]"
+      "answer": "The AI Act requires that high\u2011risk AI systems be designed and developed so that natural persons can effectively oversee them during use, with oversight measures built into the system or implemented by the deployer [1][2]. These measures must aim to prevent or minimise risks to health, safety or fundamental rights, be commensurate with the system\u2019s risk, autonomy and context, and include in\u2011built operational constraints that cannot be overridden by the system itself [3]. Providers must identify and supply such measures before the system is placed on the market or put into service, and deployers must assign competent, trained, authorised natural persons with the necessary support to monitor operation, detect anomalies and avoid automation bias [4]. The Act also requires deployers to ensure that input data is relevant and sufficiently representative for the system\u2019s intended purpose [4]."
     },
     {
       "id": "q05",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 132",
+          "score": 0.7499
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 72",
+          "score": 0.7429
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 50",
+          "score": 0.7292
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 4",
+          "score": 0.7228
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 82",
+          "score": 0.715
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "ORCA\u2011bench evaluates language\u2011model agents on **root\u2011cause analysis (RCA) tasks for on\u2011call incident response** in a live microservice environment that exposes real telemetry (metrics, logs, traces) and source code. [1][2]"
+      "answer": "Yes.  Providers must design and develop AI systems that inform natural persons that they are interacting with an AI system, unless it is obvious to a reasonably well\u2011informed, observant and circumspect person given the circumstances and context of use\u30103\u3011.  This requirement is also reflected in the recital that calls for specific transparency obligations for such systems\u30101\u3011."
     },
     {
       "id": "q06",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 101",
+          "score": 0.7988
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 53",
+          "score": 0.7893
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex XII",
+          "score": 0.7773
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex XI",
+          "score": 0.7771
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 91",
+          "score": 0.77
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Salience Bias is the tendency of LLMs to over\u2011prioritize explicit details supplied in a prompt\u2014such as numerical values or other distractors\u2014while suppressing or ignoring the implicit physical or commonsense conditions needed to solve a task. This bias arises from training that rewards attention to every provided detail and results in models being hijacked by irrelevant information in commonsense reasoning [1][2]."
+      "answer": "Providers of general\u2011purpose AI models must (a) draw up and keep up\u2011to\u2011date the technical documentation of the model, including its training and testing process and evaluation results, which must contain at least the information set out in Annex\u202fXI; and (b) draw up, keep up\u2011to\u2011date and make available information and documentation to downstream providers that intend to integrate the model, which must include the transparency information set out in Annex\u202fXII. [2][4][3]"
     },
     {
       "id": "q07",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 7",
+          "score": 0.7931
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex III",
+          "score": 0.7919
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.785
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 80",
+          "score": 0.7773
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.7746
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Fairness Pruning locates demographic bias in the GLU\u2011MLP layers of LLMs, identifying neurons that react differentially to demographic attributes in the GLU architecture by examining the signal at the down\u2011proj input. The evidence comes from empirically evaluating the method with minimally contrastive prompt pairs and inference\u2011time activation capture, which confirms that bias processing occurs in dissociable circuits within these layers. [1][2]"
+      "answer": "Annex\u202fIII lists the following areas as high\u2011risk uses of AI:  \n- Biometrics (including remote biometric identification, biometric categorisation by sensitive or protected attributes, and emotion recognition)  \n- Critical infrastructure (safety components in the management and operation of critical digital infrastructure, road traffic, or the supply of water, gas, heating or electricity)  \n- Education and vocational training (see sub\u2011section\u202f(a) of Annex\u202fIII)\u30102\u3011"
     },
     {
       "id": "q08",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 99",
+          "score": 0.7418
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 169",
+          "score": 0.7412
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 99",
+          "score": 0.7397
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 101",
+          "score": 0.7304
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex II",
+          "score": 0.7219
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Sequential memory editing is hard in 4\u2011bit quantized financial LLMs because the low\u2011precision quantization triggers a \u201cquantization stability crisis,\u201d causing existing editing methods to suffer catastrophic performance degradation and high knowledge loss. Empirical studies show that even with stability\u2011aware techniques, generalization remains low, underscoring the difficulty of editing under severe quantization [1][2]."
+      "answer": "Each Member State is responsible for laying down the rules on administrative fines for infringements of the AI Act. [1]"
     },
     {
       "id": "q09",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.8652
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.8499
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 66",
+          "score": 0.8125
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 75",
+          "score": 0.8111
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 13",
+          "score": 0.7693
+        }
+      ],
       "refused": false,
-      "cited": false,
+      "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "ParliamentBench evaluates deception using the social\u2011deduction game **Secret\u202fHitler**\u30101\u3011\u30102\u3011."
+      "answer": "High\u2011risk AI systems must be designed and developed to achieve an **appropriate level of accuracy, robustness and cybersecurity** and to perform consistently throughout their lifecycle\u202f[1]1. The required accuracy level and the relevant metrics must be declared in the instructions for use\u202f[1]3. The systems must be **resilient against errors, faults or inconsistencies** (including those arising from interaction with natural persons or other systems) and may employ technical redundancy or fail\u2011safe plans\u202f[2]4. They must also be **resilient against unauthorised third\u2011party attempts to alter use, outputs or performance** by exploiting vulnerabilities\u202f[2]5. Deployers must receive information on the level of accuracy, its metrics, robustness and cybersecurity, and any known or foreseeable circumstances that may affect these levels\u202f[5]b(ii)."
     },
     {
       "id": "q10",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.8024
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 65",
+          "score": 0.7908
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.7645
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 82",
+          "score": 0.758
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 177",
+          "score": 0.7384
+        }
+      ],
       "refused": false,
-      "cited": false,
-      "verdict": "PARTIAL",
-      "faithfulness": 0.5,
-      "answer": "FinSMART tackles the fact that most existing financial\u2011sentiment tools output discrete or non\u2011market\u2011aligned signals that are hard to use directly in portfolio construction. By converting its causal\u2011LLM predictions into continuous sentiment scores with a logit\u2011to\u2011score converter, FinSMART makes the signals directly comparable to other methods and usable in realistic, economically meaningful portfolio frameworks\u30101\u3011."
+      "cited": true,
+      "misattributed": [],
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "A risk\u2011management system is a continuous, iterative process that is planned and run throughout the entire lifecycle of a high\u2011risk AI system, requiring regular systematic review and updating to identify and mitigate risks to health, safety and fundamental rights. It must therefore run for the whole lifecycle of the system. [1] [2]"
     },
     {
       "id": "q11",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8934
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 26",
+          "score": 0.8671
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 93",
+          "score": 0.8622
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 14",
+          "score": 0.8484
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 91",
+          "score": 0.8415
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Standard packet capture formats such as PCAP are byte\u2011level, packet\u2011major binary files that store every packet in full fidelity. This design means they do not group related packets into flows, making temporal reasoning difficult, and the raw hex bytes or verbose packet\u2011level output (often exceeding 200 lines per packet) are not naturally suited to LLMs that prefer structured, flow\u2011centric text representations. Consequently, PCAP\u2019s format is ill\u2011matched to the needs of LLM\u2011based traffic analysis, which requires concise, flow\u2011oriented, and semantically rich input. [1] [2]"
+      "answer": "Deployers of high\u2011risk AI systems must:  \n\n1. Take appropriate technical and organisational measures to use the system in accordance with its instructions for use [1].  \n2. Assign human oversight to natural persons who have the necessary competence, training and authority, and provide the required support [1][4].  \n3. Where they control input data, ensure that it is relevant and sufficiently representative for the intended purpose of the system [1].  \n4. Monitor the system\u2019s operation, inform the provider and the relevant market\u2011surveillance authority if the use may present a risk or if a serious incident occurs, and suspend use when required [2].  \n5. Inform affected natural persons when decisions are made or assisted by the system [3].  \n6. Ensure that those implementing the instructions and human\u2011oversight measures possess adequate AI literacy, training and authority, and maintain appropriate records [5]."
     },
     {
       "id": "q12",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7671
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 96",
+          "score": 0.7604
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7164
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 28",
+          "score": 0.6866
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 77",
+          "score": 0.6842
+        }
+      ],
       "refused": false,
-      "cited": false,
-      "verdict": "SUPPORTED",
-      "faithfulness": 1.0,
-      "answer": "The GGC approach targets the failure mode where a generated SPARQL query is syntactically correct and executable but is **semantically mis\u2011aligned with the input question, leading to incorrect retrieval**\u30102\u3011."
+      "cited": true,
+      "misattributed": [],
+      "verdict": "PARTIAL",
+      "faithfulness": 0.5,
+      "answer": "A fundamental rights impact assessment is a process that a deployer of a high\u2011risk AI system must carry out to identify the specific risks to the rights of individuals or groups likely to be affected and to determine measures to mitigate those risks. It is intended to complement any data\u2011protection impact assessment already performed [1][3].  \n\nDeployers of high\u2011risk AI systems that are bodies governed by public law, private entities providing public services (e.g., education, healthcare, social services, housing, justice administration), and deployers of certain high\u2011risk AI systems listed in an annex to the Regulation (such as banking or insurance entities) must conduct this assessment before putting the system into use [2]."
     },
     {
       "id": "q13",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 10",
+          "score": 0.8755
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 67",
+          "score": 0.8628
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 122",
+          "score": 0.8213
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 10",
+          "score": 0.819
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 6",
+          "score": 0.7541
+        }
+      ],
       "refused": false,
-      "cited": false,
-      "verdict": "PARTIAL",
-      "faithfulness": 0.5,
-      "answer": "LEEPS cuts wasteful prompt\u2011sampling overhead in RLVR training by intervening during the prompt\u2011sampling stage, reducing the per\u2011step sampling cost to about 2\u202fs\u30101\u3011."
+      "cited": true,
+      "misattributed": [],
+      "verdict": "SUPPORTED",
+      "faithfulness": 1.0,
+      "answer": "Training data for high\u2011risk AI systems must meet the quality criteria set out in Article\u202f10 and be governed by the data\u2011governance and management practices listed in that article.  Those practices include:  \n\n- the relevant design choices;  \n- the data\u2011collection processes and the origin of the data, and for personal data the original purpose of collection;  \n- the data\u2011preparation operations (annotation, labelling, cleaning, updating, enrichment, aggregation);  \n- the formulation of assumptions about what the data are intended to measure and represent; and  \n- an assessment of the availability of the data.  \n\nThese requirements are intended to ensure that the training data are relevant, sufficiently representative, free of errors, complete, and that the original purpose of collection is transparent, thereby supporting the safe and non\u2011discriminatory performance of the high\u2011risk AI system.  \n\n[1] Article\u202f10(1\u20112)  \n[2] Recital\u202f67"
     },
     {
       "id": "q14",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 11",
+          "score": 0.8037
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 72",
+          "score": 0.8016
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 71",
+          "score": 0.7956
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 9",
+          "score": 0.7854
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.7794
+        }
+      ],
       "refused": false,
-      "cited": false,
+      "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "TriShield defends against NeuroImprint\u2011style privacy backdoor attacks in federated LLM fine\u2011tuning\u30101\u3011\u30102\u3011."
+      "answer": "The technical documentation must be prepared so that it **demonstrates that the high\u2011risk AI system complies with the requirements set out in this Section** and provides national competent authorities and notified bodies with the necessary information in a clear and comprehensive form to assess that compliance. [1]"
     },
     {
       "id": "q15",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 40",
+          "score": 0.8602
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 50",
+          "score": 0.8345
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 6",
+          "score": 0.8086
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 6",
+          "score": 0.8073
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.7881
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "IFHierBench evaluates hierarchical instruction\u2011following, testing whether a model can satisfy constraints that are scoped to nested sections of an output rather than applying a flat list of constraints to the whole response. [1][2]"
+      "answer": "The GDPR lists the following lawful bases for processing personal data:\n\n- The data subject has given consent for one or more specific purposes.  \n- Processing is necessary for the performance of a contract to which the data subject is party or to take steps at the request of the data subject prior to entering into a contract.  \n- Processing is necessary for compliance with a legal obligation to which the controller is subject.  \n- Processing is necessary to protect the vital interests of the data subject or of another natural person.  \n- Processing is necessary for the performance of a task carried out in the public interest or in the exercise of official authority vested in the controller.  \n- Processing is necessary for the purposes of the legitimate interests pursued by the controller or by a third party, except where such interests are overridden by the interests or fundamental rights and freedoms of the data subject, in particular where the data subject is a child.  \n\nPublic authorities are exempt from the legitimate\u2011interests basis.  \n[3][4]"
     },
     {
       "id": "q16",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.8627
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 87",
+          "score": 0.8229
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.8012
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 85",
+          "score": 0.7786
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.7452
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "MemTxn adds a transaction boundary to agent memory that guarantees atomic persistence, rollback, checkpoints, and complete application\u2011state recovery after an abort or failure. It provides write\u2011ahead logging, partial rollback, and atomic commit so that the memory can be restored to a consistent state independently of model weights. [1][2]"
+      "answer": "A personal data breach must be notified to the supervisory authority \u201cwithout undue delay and, where feasible, not later than 72\u202fhours after having become aware of it\u201d [1]. If the notification cannot be made within 72\u202fhours, the reasons for the delay must be provided [4]."
     },
     {
       "id": "q17",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.8302
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 34",
+          "score": 0.8278
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 86",
+          "score": 0.8265
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 87",
+          "score": 0.7915
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 33",
+          "score": 0.7517
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "The Reasoning Consensus framework ensembles the **reasoning structure** of multiple LLMs, not just their final answers. It does this by extracting a directed\u2011acyclic\u2011graph (DAG) for each reasoning trace, merging those DAGs with a logic\u2011preserving operator, and weighting each node by cross\u2011trace attestation to form a weighted consensus graph. This produces an interpretable, auditable reasoning structure that can be inspected and compared across models. [1][2]"
+      "answer": "A personal data breach must be communicated to the data subject (rather than only to the supervisory authority) when the breach is likely to result in a high risk to the rights and freedoms of the data subjects. In that case the controller is required to notify the data subjects without undue delay, providing clear information about the breach and the measures taken or proposed to mitigate its effects. This obligation applies unless one of the conditions in Article\u202f34(3) is met, such as the presence of appropriate technical and organisational protection measures that render the data unintelligible to unauthorised persons. [2] 1, [2] 2, [2] 3"
     },
     {
       "id": "q18",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 90",
+          "score": 0.8654
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 35",
+          "score": 0.8351
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 84",
+          "score": 0.8345
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 35",
+          "score": 0.8325
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 27",
+          "score": 0.7694
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "DualAnchor tackles gloss\u2011free sign\u2011language translation, aiming to (1) preserve the pretrained language prior to maintain fluency and (2) improve lexical fidelity to reduce content\u2011word errors. [2]"
+      "answer": "A data protection impact assessment must be carried out **prior to processing** when the processing is likely to result in a high risk to the rights and freedoms of natural persons, especially if it involves new technologies or a systematic, extensive evaluation of personal aspects based on automated processing and profiling. The assessment is also required when there is a change in the risk represented by the processing operations. [4] [3] [1]"
     },
     {
       "id": "q19",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 37",
+          "score": 0.8477
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 37",
+          "score": 0.8382
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 38",
+          "score": 0.8363
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 38",
+          "score": 0.818
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 39",
+          "score": 0.7951
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "The study compared three idea pools: human students, GPT\u20114 with zero\u2011shot prompting, and GPT\u20114 with example prompting. It measured the number of unique ideas and perceived novelty. The AI\u2011generated pools produced fewer unique ideas than the human pool, and adding examples further reduced the estimated number of unique ideas. Novelty was assessed via a survey of respondents. [1][2]"
+      "answer": "An organisation must designate a data protection officer when any of the following apply:  \n1. The processing is carried out by a public authority or body (except courts acting in their judicial capacity);  \n2. The core activities of the controller or processor involve processing operations that, by nature, scope or purpose, require regular and systematic monitoring of data subjects on a large scale; or  \n3. The core activities involve large\u2011scale processing of special categories of data or personal data relating to criminal convictions and offences.  \nA group of undertakings may appoint a single data protection officer provided it is easily accessible from each establishment. [2]"
     },
     {
       "id": "q20",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 17",
+          "score": 0.7692
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 17",
+          "score": 0.7484
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 66",
+          "score": 0.7324
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 65",
+          "score": 0.6857
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6792
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "CoevolveSim simulates the diffusion and co\u2011evolution of beliefs among a networked population of large language models. [1]"
+      "answer": "The right to erasure, or \u201cright to be forgotten,\u201d is the data subject\u2019s right to obtain from the controller the erasure of personal data concerning them without undue delay [1]. It can be invoked when the data are no longer necessary for the purposes for which they were collected, when the data subject withdraws consent, when the data subject objects to the processing, when the data have been unlawfully processed, or when erasure is required for compliance with a legal obligation, the establishment, exercise or defence of legal claims, or other grounds listed in Article\u202f17(1) [1][4]. The right may be limited where erasure would impede freedom of expression, legal obligations, public interest, archiving, scientific or historical research, or the defence of legal claims, as set out in Article\u202f17(2) [2]."
     },
     {
       "id": "q21",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 20",
+          "score": 0.8413
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 20",
+          "score": 0.8107
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 68",
+          "score": 0.7495
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 15",
+          "score": 0.7369
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 4",
+          "score": 0.7361
+        }
+      ],
       "refused": false,
-      "cited": false,
+      "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Narrative Anchoring is a failure mode in which identical clinical facts expressed in different sociolinguistic registers lead language models to produce divergent diagnostic outputs\u30102\u3011. It shows up as a measurable bias gap in model predictions when the same vignette is rewritten in varied personas\u30101\u3011."
+      "answer": "The right to data portability is the data subject\u2019s right to receive the personal data they have supplied to a controller in a structured, commonly used, machine\u2011readable format and to transmit that data to another controller without hindrance, provided the processing is based on consent or a contract and is carried out by automated means. This right does not apply to processing necessary for the performance of a task carried out in the public interest or in the exercise of official authority, nor does it adversely affect the rights and freedoms of others. [1] [2]"
     },
     {
       "id": "q22",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 22",
+          "score": 0.7516
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 71",
+          "score": 0.7435
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 22",
+          "score": 0.7425
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 59",
+          "score": 0.7364
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 86",
+          "score": 0.7355
+        }
+      ],
       "refused": false,
-      "cited": false,
+      "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "Linguistic monoculture is the reduction of population\u2011level variation in linguistic form that occurs when many users rely on the same large language models (LLMs) to draft, revise, or polish text. It is caused by the widespread use of shared models that tend to privilege dominant, standardized varieties of English, thereby suppressing non\u2011standard or peripheral forms and driving convergence toward a single linguistic norm\u30102\u3011\u30103\u3011."
+      "answer": "A person has the following rights under the GDPR when a decision is based solely on automated processing, including profiling:\n\n1. **Right not to be subject to such a decision** \u2013 the data subject may refuse to be affected by a decision that is solely automated and has legal effects or significant impact [1].  \n2. **Right to human intervention** \u2013 the data subject may obtain human intervention by the controller in the decision\u2011making process [3].  \n3. **Right to express a point of view** \u2013 the data subject may state their view on the decision [3].  \n4. **Right to contest the decision** \u2013 the data subject may challenge the decision made solely on automated processing [3].  \n\nThese rights apply unless an exception in paragraph\u202f2 of Article\u202f22 applies."
     },
     {
       "id": "q23",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.8522
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 39",
+          "score": 0.8042
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 2",
+          "score": 0.8021
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 5",
+          "score": 0.7971
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 40",
+          "score": 0.797
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "OptimismBench detects a systematic optimism bias\u2014a directional tilt in probability judgments\u2014that calibration metrics, which aggregate unsigned errors, fail to reveal [1]."
+      "answer": "The GDPR sets out the following principles that govern the processing of personal data:  \n\n- **Lawfulness, fairness and transparency** \u2013 data must be processed in a lawful, fair and transparent manner.  \n- **Purpose limitation** \u2013 data are collected for specified, explicit and legitimate purposes and not further processed in a way that is incompatible with those purposes.  \n- **Data minimisation** \u2013 data must be adequate, relevant and limited to what is necessary for the purposes for which they are processed.  \n- **Accuracy** \u2013 inaccurate data must be erased or rectified without delay.  \n- **Storage limitation** \u2013 data may be kept only for as long as necessary for the purposes for which they are processed, except for certain archiving, scientific or statistical purposes.  \n- **Security** \u2013 data must be processed in a manner that ensures appropriate security, protecting against unauthorised, unlawful or accidental loss, destruction or damage.  \n\nThese principles are set out in GDPR Article\u202f5 and further elaborated in the recitals. [1][4]"
     },
     {
       "id": "q24",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 7",
+          "score": 0.7601
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 7",
+          "score": 0.7586
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 43",
+          "score": 0.7287
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 61",
+          "score": 0.7165
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 61",
+          "score": 0.7118
+        }
+      ],
       "refused": false,
       "cited": true,
-      "verdict": "SUPPORTED",
-      "faithfulness": 1.0,
-      "answer": "AgentSnare interferes with autonomous penetration agents by acting as a trajectory\u2011adaptive decoy system that injects deceptive observations into the agent\u2019s observation\u2013action loop. It dynamically constructs and discloses decoy artifacts conditioned on the agent\u2019s evolving actions, generating candidates from the interaction history and current decoy state and validating each against the current action, prior committed facts, and future steps to maintain global consistency. This causes the agent to be delayed, diverted, or defused, preventing successful real\u2011target exploitation. [1][2]"
+      "misattributed": [],
+      "verdict": "PARTIAL",
+      "faithfulness": 0.5,
+      "answer": "Consent must be **freely given, specific, informed, and unambiguous**.  \n- The controller must be able to demonstrate that the data subject has consented, and the consent must be presented in a clear, intelligible, and easily accessible form, distinct from other matters [2].  \n- Consent must be **easy to withdraw** as it is to give, and withdrawal must not affect the lawfulness of prior processing [1][2].  \n- Consent is presumed not freely given if it is **conditional on a contract or service that does not require the processing** or if there is a clear imbalance between the subject and the controller, such as a public authority [3].  \n- For AI\u2011system testing outside sandboxes, consent must be **freely\u2011given and informed** with concise, clear, relevant information covering the nature, objectives, possible inconvenience, conditions, duration, rights (including the right to refuse or withdraw without detriment), arrangements for reversing AI outputs, a unique ID, and contact details, and it must be dated, documented, and a copy given to the subject [4][5]."
     },
     {
       "id": "q25",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 95",
+          "score": 0.76
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 115",
+          "score": 0.7399
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 24",
+          "score": 0.7307
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 28",
+          "score": 0.725
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 70",
+          "score": 0.7238
+        }
+      ],
       "refused": false,
       "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "SecRespond is the first benchmark that evaluates LLM agents in a **post\u2011compromise** setting, where the agent must analyze a forensic disk snapshot together with alerts, vulnerability scans and baseline checks to produce forensic reports and remediation plans. Earlier benchmarks have focused on **pre\u2011compromise** scenarios, placing agents in a clean, idealized environment before an attack occurs [1][2]."
+      "answer": "Controllers must implement **appropriate technical and organisational measures** to ensure and be able to demonstrate compliance with the GDPR, review and update them as necessary, and may include data\u2011protection policies and approved codes of conduct or certification mechanisms as evidence of compliance\u30103\u3011.  \n\nProcessors must provide **sufficient guarantees** to implement appropriate technical and organisational measures so that processing meets the Regulation\u2019s requirements and protects data subjects\u2019 rights. They may not engage another processor without the controller\u2019s written authorisation, and any changes must be communicated to the controller to allow objection\u30104\u3011.  \n\nAdditionally, processors should assist controllers, where necessary and upon request, in ensuring compliance with obligations arising from data\u2011protection impact assessments and prior consultation with supervisory authorities\u30101\u3011."
     },
     {
       "id": "q26",
       "answerable": true,
       "retrieval_hit": true,
+      "provision_hit": true,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 83",
+          "score": 0.7686
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 150",
+          "score": 0.7664
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 150",
+          "score": 0.7664
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 83",
+          "score": 0.7591
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 100",
+          "score": 0.7521
+        }
+      ],
       "refused": false,
-      "cited": false,
+      "cited": true,
+      "misattributed": [],
       "verdict": "SUPPORTED",
       "faithfulness": 1.0,
-      "answer": "It was evaluated in the product domain, specifically for digital product passports (DPP)\u30101\u3011\u30102\u3011"
+      "answer": "The amount of an administrative fine under the GDPR is determined by the supervisory authority taking into account:\n\n* the **nature, gravity and duration** of the infringement, including the purpose and scope of the processing, the number of data subjects affected and the level of damage suffered by them [1][2];\n* the **intentional or negligent character** of the infringement [1];\n* the **measures taken to ensure compliance** with the obligations and to prevent or mitigate the consequences of the infringement [2];\n* the **general level of income** in the Member State and the economic situation of the person or undertaking when setting the fine [3];\n* the possibility of using the **consistency mechanism** to promote uniform application of fines [3].\n\nThese factors guide the supervisory authority in deciding whether to impose a fine and in setting its amount."
     },
     {
       "id": "q27",
-      "answerable": true,
-      "retrieval_hit": true,
-      "refused": false,
-      "cited": true,
-      "verdict": "SUPPORTED",
-      "faithfulness": 1.0,
-      "answer": "Existing automated metrics often fail to capture the complexity and variability inherent in LLM\u2011generated outputs, and they typically rely on explicit reference standards, which limits their usefulness to domains with objective benchmarks. [2]"
+      "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 144",
+          "score": 0.4723
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex X",
+          "score": 0.4712
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 117",
+          "score": 0.4709
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Annex X",
+          "score": 0.4698
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 4",
+          "score": 0.4675
+        }
+      ],
+      "refused": true,
+      "cited": false,
+      "misattributed": [],
+      "answer": "The indexed regulations do not contain enough information to answer this."
     },
     {
       "id": "q28",
       "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 52",
+          "score": 0.5495
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 3",
+          "score": 0.5435
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 8",
+          "score": 0.5393
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.5195
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 15",
+          "score": 0.5195
+        }
+      ],
       "refused": true,
       "cited": false,
-      "answer": "The indexed papers do not contain enough information to answer this."
+      "misattributed": [],
+      "answer": "The indexed regulations do not contain enough information to answer this."
     },
     {
       "id": "q29",
       "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 118",
+          "score": 0.7136
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 145",
+          "score": 0.6902
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 62",
+          "score": 0.6543
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 31",
+          "score": 0.6443
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 11",
+          "score": 0.6438
+        }
+      ],
       "refused": true,
       "cited": false,
-      "answer": "The indexed papers do not contain enough information to answer this."
+      "misattributed": [],
+      "answer": "The indexed regulations do not contain enough information to answer this."
     },
     {
       "id": "q30",
       "answerable": false,
-      "refused": true,
-      "cited": false,
-      "answer": "The indexed papers do not contain enough information to answer this."
+      "sources": [
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 77",
+          "score": 0.8254
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Recital 78",
+          "score": 0.788
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 42",
+          "score": 0.7498
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 47",
+          "score": 0.7148
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 41",
+          "score": 0.7097
+        }
+      ],
+      "refused": false,
+      "cited": true,
+      "misattributed": [
+        "Cyber Resilience Act"
+      ],
+      "answer": "The EU Cyber Resilience Act requires that products with digital elements undergo a conformity assessment based on internal control, and that the assessment must consider cybersecurity risks such as attempts by unauthorised third parties to alter use, behaviour or performance, including data\u2011poisoning or adversarial attacks [1][2]. High\u2011risk AI systems that have been certified or have a statement of conformity under Regulation (EU)\u202f2019/881 are presumed to meet the cybersecurity requirements set out in Article\u202f15 of the Act [3]. The provider must draw up a single EU declaration of conformity that identifies all applicable Union legislation and keep it up\u2011to\u2011date, thereby assuming responsibility for compliance with the relevant requirements [4]."
     },
     {
       "id": "q31",
       "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 152",
+          "score": 0.6473
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6439
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 89",
+          "score": 0.6409
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 159",
+          "score": 0.6388
+        },
+        {
+          "doc_id": "32024R1689",
+          "label": "Article 5",
+          "score": 0.6239
+        }
+      ],
       "refused": true,
       "cited": false,
-      "answer": "The indexed papers do not contain enough information to answer this."
+      "misattributed": [],
+      "answer": "The indexed regulations do not contain enough information to answer this."
     },
     {
       "id": "q32",
       "answerable": false,
+      "sources": [
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 157",
+          "score": 0.5004
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Recital 54",
+          "score": 0.4881
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 9",
+          "score": 0.474
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 9",
+          "score": 0.4503
+        },
+        {
+          "doc_id": "32016R0679",
+          "label": "Article 36",
+          "score": 0.4426
+        }
+      ],
       "refused": true,
       "cited": false,
-      "answer": "The indexed papers do not contain enough information to answer this."
+      "misattributed": [],
+      "answer": "The indexed regulations do not contain enough information to answer this."
     }
   ]
 }
