@@ -1,11 +1,15 @@
-"""Score the pipeline on eval/questions.jsonl.
+"""Scores the pipeline on eval/questions.jsonl.
 
-Metrics: retrieval and provision hit-rate, false refusals, refusal accuracy on
-traps, citation rate, misattribution, and LLM-judged faithfulness.
+Retrieval is scored by provision hit-rate: does the top-k contain the provision
+that answers the question? With an LLM, the run also scores false refusals,
+refusal accuracy on trap questions, citation rate, misattribution and
+faithfulness (judged by the same LLM, so treat it as an upper bound).
 
-    python eval/run_eval.py                     # full run
-    python eval/run_eval.py --no-llm            # retrieval metrics only, fast
-    python eval/run_eval.py --k 10 --name k10   # try another retrieval depth
+Usage:
+    python -m eval.run_eval --no-llm   # retrieval only, no LLM needed
+    python -m eval.run_eval            # full run
+    python -m eval.run_eval --k 10     # another retrieval depth
+    python -m eval.run_eval --plain    # plain top-k, without the ranking rules
 """
 
 import argparse
@@ -17,27 +21,33 @@ import sys
 import time
 
 from eulaw import config
-from eulaw.generate import REFUSAL, answer, call_llm, format_context
+from eulaw import generate
+from eulaw import retrieve
 
 QUESTIONS_FILE = pathlib.Path(__file__).parent / "questions.jsonl"
 RESULTS_DIR = pathlib.Path(__file__).parent / "results"
 
-# Models cite as [1], 【3】 or 【1†L1-L3】. Requiring a digit immediately before
-# the closing bracket under-counted the last form, so allow an annotation.
-CITATION_PATTERN = r"[\[【]\d+[^\[\]【】]{0,30}[\]】]"
+# Models cite as [1], 【3】 or 【1†L1-L3】.
+_CITATION = re.compile(r"[\[【]\d+[^\[\]【】]{0,30}[\]】]")
 
-# EU instruments absent from the corpus. An answer asserting what one of these
-# requires is relabelling corpus text as a law it never saw.
-FOREIGN_INSTRUMENTS = (
+# Laws and rulings that are not in the corpus. An answer that names one is
+# presenting corpus text as something it is not.
+_FOREIGN_LAWS = (
     "Cyber Resilience Act",
     "Digital Services Act",
     "Digital Markets Act",
     "Data Governance Act",
+    "Data Act",
     "NIS2",
     "ePrivacy",
+    "Product Liability Directive",
+    "Consumer Privacy Act",
+    "Executive Order",
+    "Schrems",
 )
 
-JUDGE_TEMPLATE = """You are grading a research assistant's answer against its sources.
+_JUDGE_TEMPLATE = """\
+You are grading a research assistant's answer against its sources.
 
 Excerpts the assistant was given:
 {context}
@@ -53,137 +63,150 @@ SUPPORTED if every claim is backed by the excerpts."""
 
 
 def load_questions(path: pathlib.Path = QUESTIONS_FILE) -> list[dict]:
+    """Reads the question set, one JSON object per line."""
     with open(path, encoding="utf-8") as f:
-        return [json.loads(line) for line in f]
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def parse_verdict(reply: str) -> tuple[str, float]:
-    """Order matters: 'SUPPORTED' is a substring of 'UNSUPPORTED'."""
+    """Maps the judge's reply to a label and a score in [0, 1]."""
     text = reply.strip().upper()
-    for label, score in (("UNSUPPORTED", 0.0), ("PARTIAL", 0.5), ("SUPPORTED", 1.0)):
+    # UNSUPPORTED first: it contains SUPPORTED.
+    for label, score in (("UNSUPPORTED", 0.0), ("PARTIAL", 0.5),
+                         ("SUPPORTED", 1.0)):
         if label in text:
             return label, score
     return "UNPARSEABLE", 0.0
 
 
 def misattributed(text: str) -> list[str]:
-    """A plain string check, so it cannot inherit the generator's blind spots."""
-    return [name for name in FOREIGN_INSTRUMENTS if name.lower() in text.lower()]
+    """Lists the laws outside the corpus that an answer names.
+
+    A plain string match, so it cannot share the generator's blind spots.
+    """
+    return [law for law in _FOREIGN_LAWS
+            if re.search(rf"\b{re.escape(law)}\b", text, re.IGNORECASE)]
 
 
-def judge_faithfulness(context: str, answer_text: str) -> tuple[str, float]:
-    reply = call_llm(JUDGE_TEMPLATE.format(context=context, answer=answer_text))
-    return parse_verdict(reply)
+def provision_hit(question: dict, hits: list[dict]) -> bool:
+    """Whether the hits include a gold provision of the question."""
+    return any(hit["doc_id"] in question["source_ids"]
+               and hit["label"] in question["source_labels"]
+               for hit in hits)
 
 
-def evaluate(k: int, use_llm: bool) -> tuple[list[dict], dict]:
-    from eulaw.retrieve import retrieve
+def score_question(question: dict, k: int, use_llm: bool,
+                   plain: bool) -> dict:
+    """Runs one question through the pipeline and scores it.
 
-    rows = []
-    for q in load_questions():
-        hits = retrieve(q["question"], k=k)
-        row = {"id": q["id"], "answerable": q["answerable"]}
+    Args:
+        question: One entry of the question set.
+        k: Retrieval depth.
+        use_llm: Whether to generate and judge an answer.
+        plain: Whether to use plain top-k instead of the ranking rules.
 
-        if q["answerable"]:
-            row["retrieval_hit"] = bool(set(q["source_ids"]) &
-                                        {h["doc_id"] for h in hits})
-            # Document-level is trivial with two regulations; score the provision.
-            if q.get("source_labels"):
-                row["provision_hit"] = bool(set(q["source_labels"]) &
-                                            {h["label"] for h in hits})
+    Returns:
+        The scores, plus the retrieved sources and the answer, so the run can
+        be re-analysed without calling the LLM again.
+    """
+    rules = {"max_per_provision": k, "min_primary": 0.0} if plain else {}
+    hits = retrieve.retrieve(question["question"], k=k, **rules)
+    row = {"id": question["id"], "answerable": question["answerable"]}
+    if question["answerable"]:
+        row["provision_hit"] = provision_hit(question, hits)
+    row["sources"] = [{"doc_id": h["doc_id"], "label": h["label"],
+                       "score": h["score"]} for h in hits]
+    if not use_llm:
+        return row
 
-        # Keep the excerpts, not just the score: re-analysis then costs no
-        # further LLM calls.
-        row["sources"] = [{"doc_id": h["doc_id"], "label": h["label"],
-                           "score": h["score"]} for h in hits]
-
-        if use_llm:
-            result = answer(q["question"], k=k)
-            text = result["answer"]
-            row["refused"] = REFUSAL in text
-            row["cited"] = bool(re.search(CITATION_PATTERN, text))
-            row["misattributed"] = misattributed(text)
-            if q["answerable"] and not row["refused"]:
-                label, score = judge_faithfulness(
-                    format_context(result["sources"]), text)
-                row["verdict"], row["faithfulness"] = label, score
-            row["answer"] = text
-
-        rows.append(row)
-        status = "hit " if row.get("retrieval_hit") else ("miss" if q["answerable"] else "trap")
-        print(f"{q['id']} [{status}] provision={row.get('provision_hit', '-')} "
-              f"refused={row.get('refused', '-')} verdict={row.get('verdict', '-')} "
-              f"misattr={row.get('misattributed', '-')}")
-    return rows, summarize(rows, k, use_llm)
+    text = generate.call_llm(generate.build_prompt(question["question"], hits))
+    row["refused"] = generate.REFUSAL in text
+    row["cited"] = bool(_CITATION.search(text))
+    row["misattributed"] = misattributed(text)
+    if question["answerable"] and not row["refused"]:
+        reply = generate.call_llm(_JUDGE_TEMPLATE.format(
+            context=generate.format_context(hits), answer=text))
+        row["verdict"], row["faithfulness"] = parse_verdict(reply)
+    row["answer"] = text
+    return row
 
 
-def _mean(values: list) -> float | None:
+def _mean(values: list[bool | float]) -> float | None:
     return statistics.mean(values) if values else None
 
 
-def summarize(rows: list[dict], k: int, use_llm: bool) -> dict:
+def summarize(rows: list[dict], k: int, use_llm: bool, plain: bool) -> dict:
+    """Aggregates per-question rows into the headline metrics."""
     answerable = [r for r in rows if r["answerable"]]
     traps = [r for r in rows if not r["answerable"]]
-
     summary = {
         "timestamp": time.strftime("%Y-%m-%d %H:%M"),
         "n_questions": len(rows),
+        "n_answerable": len(answerable),
+        "n_traps": len(traps),
         "config": {
             "k": k,
-            "documents": [d["celex"] for d in config.DOCUMENTS],
-            "chunk_size": config.CHUNK_SIZE,
-            "chunk_overlap": config.CHUNK_OVERLAP,
+            "ranking_rules": not plain,
             "max_chunks_per_provision": config.MAX_CHUNKS_PER_PROVISION,
             "min_primary": config.MIN_PRIMARY,
             "embedding_model": config.EMBEDDING_MODEL,
             "llm_model": config.LLM_MODEL if use_llm else None,
         },
-        "retrieval_hit_rate": _mean([r["retrieval_hit"] for r in answerable]),
-        "provision_hit_rate": _mean(
-            [r["provision_hit"] for r in answerable if "provision_hit" in r]),
+        "provision_hit_rate": _mean([r["provision_hit"] for r in answerable]),
     }
     if use_llm:
         answered = [r for r in answerable if not r["refused"]]
-        judged = [r for r in answered if "faithfulness" in r]
         summary.update({
             "false_refusal_rate": _mean([r["refused"] for r in answerable]),
             "refusal_accuracy": _mean([r["refused"] for r in traps]),
             "citation_rate": _mean([r["cited"] for r in answered]),
             "misattribution_rate": _mean(
                 [bool(r["misattributed"]) for r in rows]),
-            "faithfulness": _mean([r["faithfulness"] for r in judged]),
+            "faithfulness": _mean(
+                [r["faithfulness"] for r in answered if "faithfulness" in r]),
         })
     return summary
 
 
 def main() -> None:
-    # Legal text has characters the Windows console cannot encode by default.
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description="Evaluate the RAG pipeline.")
     parser.add_argument("--k", type=int, default=config.TOP_K,
-                        help="retrieval depth (default: config.TOP_K)")
+                        help="retrieval depth")
     parser.add_argument("--no-llm", action="store_true",
-                        help="retrieval metrics only; no generation or judging")
-    parser.add_argument("--name", default=None,
-                        help="results file name (default: k<k>)")
+                        help="retrieval metrics only; no generation")
+    parser.add_argument("--plain", action="store_true",
+                        help="plain top-k, without the two ranking rules")
     args = parser.parse_args()
+    # Legal text has characters a Windows console cannot always encode.
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    use_llm = not args.no_llm
 
-    rows, summary = evaluate(k=args.k, use_llm=not args.no_llm)
+    rows = []
+    for question in load_questions():
+        row = score_question(question, args.k, use_llm, args.plain)
+        rows.append(row)
+        print(f"{row['id']} provision_hit={row.get('provision_hit', '-')} "
+              f"refused={row.get('refused', '-')} "
+              f"verdict={row.get('verdict', '-')}")
+    summary = summarize(rows, args.k, use_llm, args.plain)
 
-    name = args.name or (f"k{args.k}" + ("-nollm" if args.no_llm else ""))
+    name = f"k{args.k}"
+    if args.plain:
+        name += "-plain"
+    if not use_llm:
+        name += "-nollm"
     RESULTS_DIR.mkdir(exist_ok=True)
     out = RESULTS_DIR / f"{name}.json"
     out.write_text(json.dumps({"summary": summary, "rows": rows}, indent=2),
                    encoding="utf-8")
 
-    print("\n=== summary ===")
+    print()
     for key, value in summary.items():
         if isinstance(value, float):
-            print(f"{key:>22}: {value:.2f}")
-        elif key != "config":
-            print(f"{key:>22}: {value}")
-    print(f"{'config':>22}: {summary['config']}")
-    print(f"\nsaved -> {out}")
+            print(f"{key:>20}: {value:.2f}")
+        else:
+            print(f"{key:>20}: {value}")
+    print(f"\nsaved to {out}")
 
 
 if __name__ == "__main__":
