@@ -1,114 +1,111 @@
-# EU AI Act & GDPR — grounded question answering
+# EU AI Act & GDPR: question answering with citations
 
 [![CI](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/KhaledAwadallah/eu-law-rag/actions/workflows/ci.yml)
 [![Live demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://eu-law-rag-o7k3yvaafngnv6ljlkxg6h.streamlit.app/)
 
-**[Try the live demo](https://eu-law-rag-o7k3yvaafngnv6ljlkxg6h.streamlit.app/)** — ask when an AI system counts as high-risk, or ask *"What is the capital of Austria?"* to watch the grounding contract refuse a question it cannot answer from the regulations.
+Ask a question about the EU AI Act or the GDPR and get a short answer based
+only on the legal text, with links to the exact articles on EUR-Lex. If the
+regulations don't contain the answer, the app says so instead of guessing.
+It is a RAG pipeline built from scratch, without a framework.
 
-Ask a question about EU tech regulation, get an answer grounded in the legal text, cited to the exact article and deep-linked to it on EUR-Lex. A RAG pipeline built from scratch, no framework.
+**[Try the live demo](https://eu-law-rag-o7k3yvaafngnv6ljlkxg6h.streamlit.app/)**,
+e.g. *"When is an AI system high-risk?"*, or *"What is the capital of
+Austria?"* to see it refuse.
 
-**Corpus:** the AI Act (Reg. 2024/1689) and the GDPR (Reg. 2016/679) in full — 578 provisions, 908k characters, 1,357 chunks.
+> Not legal advice. It answers from the text of the two regulations only, not
+> from amendments, case law or national rules.
 
-**Pipeline:** EUR-Lex XHTML → one chunk per provision → `bge-small-en-v1.5` embeddings → ChromaDB search under two ranking rules → grounded generation with citations and refusal (`gpt-oss:20b` via Ollama, or any OpenAI-compatible endpoint) → evaluation harness.
+## How it works
 
-> **Not legal advice.** This reports what the consolidated text says; it does not track amendments, case law or national implementations.
+1. **Corpus**: both regulations are downloaded from EUR-Lex and split into
+   their 578 articles, recitals and annexes.
+2. **Chunks**: one chunk per provision (long ones are split), 1,357 in total.
+   EUR-Lex gives every provision an anchor, so each chunk links straight to it.
+3. **Index**: chunks are embedded with `bge-small-en-v1.5` and stored in
+   ChromaDB.
+4. **Retrieval**: the top 5 chunks, with two rules on top of similarity:
+   at most 2 chunks from the same provision, and 3 of the 5 slots reserved for
+   articles and annexes. Without the second rule, recitals (the explanatory
+   preamble) push out the binding articles on plain-language questions.
+5. **Answer**: an LLM answers only from the retrieved excerpts and cites them,
+   or replies with a fixed refusal.
 
-## Why provisions
+`eulaw/` has one file per step and all settings in `config.py`, where adding
+a regulation means adding its CELEX id.
 
-EUR-Lex serves each regulation as XHTML where every article, recital and annex sits in a `<div>` whose id is also its page anchor (`art_6`, `rct_47`, `anx_III`). So a chunk is a provision, and a citation is a link the reader can check in one click instead of searching a 100-page document.
+## Run it
 
-Adding another regulation is one CELEX id in [config.py](src/eulaw/config.py) — e.g. the Data Act (`32023R2854`) or the DSA (`32022R2065`).
-
-## Two ranking rules
-
-Plain top-k similarity is wrong here in two measurable ways.
-
-**Diversity is per provision, not per document.** With two regulations, capping per *document* starves the top-k instead of spreading it — k=5 returned 4 hits. AI Act Article 5 alone is 11k characters, so the unit that must not dominate is the article.
-
-**Articles outrank recitals; embeddings disagree.** Recitals are explanatory preamble written in flowing prose, so they out-embed the binding articles on plain-language questions. *"What are the lawful bases for processing personal data?"* returned five recitals and no GDPR Article 6 — the provision that answers it — which sat at candidate rank 5. Fix: reserve 60% of the top-k for articles and annexes, then fill by score. No reranker.
-
-## The code
-
-Seven files, 361 lines of executable code, one per pipeline stage:
-
-| file | what it does |
-|---|---|
-| [config.py](src/eulaw/config.py) | every setting: CELEX ids, chunk size, top-k, ranking rules, LLM endpoint, UI copy |
-| [corpus.py](src/eulaw/corpus.py) | download from EUR-Lex, split into articles, recitals and annexes |
-| [chunk.py](src/eulaw/chunk.py) | one chunk per provision, splitting only those too long to fit |
-| [index.py](src/eulaw/index.py) | embed into ChromaDB |
-| [retrieve.py](src/eulaw/retrieve.py) | vector search plus the two ranking rules |
-| [generate.py](src/eulaw/generate.py) | prompt → LLM → answer with sources |
-
-Plus `app.py` and `streamlit_app.py` (two front ends over the same `answer()` call) and `eval/run_eval.py`.
-
-## Usage
-
-```powershell
-.\setup.ps1                                 # venv, dependencies, tests
-python -m eulaw.corpus                      # download + parse from EUR-Lex
-python -m eulaw.chunk                       # one chunk per provision
-python -m eulaw.index                       # embed + build the index
-python -m eulaw.retrieve "your question"    # inspect raw retrieval
-python -m eulaw.generate "your question"    # full answer with sources
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
 ```
 
-The prebuilt index ships in the repo, so the app and the retrieval evaluation run straight after install. Generation needs [Ollama](https://ollama.com) (`ollama pull gpt-oss:20b`) or any OpenAI-compatible provider via `LLM_BASE_URL` / `LLM_MODEL` / `LLM_API_KEY`.
+The vector index is in the repo. Answers need an LLM: [Ollama](https://ollama.com)
+with `gpt-oss:20b` by default, or any OpenAI-compatible API set through
+`LLM_BASE_URL`, `LLM_MODEL` and `LLM_API_KEY`. The live demo runs on Streamlit
+Community Cloud with those three set as secrets.
 
-```powershell
-python app.py                        # Gradio  -> http://localhost:7860
-streamlit run streamlit_app.py       # Streamlit -> http://localhost:8501
+To rebuild the index, or to query from the command line:
 
-docker build -t eu-law-rag .
-docker run -p 7860:7860 -v "${PWD}/data:/app/data" -e LLM_BASE_URL=http://host.docker.internal:11434/v1 eu-law-rag
+```bash
+python -m eulaw.corpus          # download and parse the regulations
+python -m eulaw.chunk           # split into chunks
+python -m eulaw.index           # embed and index
+python -m eulaw.retrieve "When is an AI system high-risk?"
+python -m eulaw.generate "When is an AI system high-risk?"
 ```
-
-Deployed on Streamlit Community Cloud: embeddings and search on CPU, generation via a hosted API. Set `LLM_BASE_URL`, `LLM_MODEL` and the `LLM_API_KEY` **secret** in the platform; the index is committed so the app never runs ingestion.
 
 ## Evaluation
 
-32 hand-written questions (`eval/questions.jsonl`): 26 answerable, each tagged with the exact provision that answers it, plus 6 traps with no answer in the corpus.
+[`eval/questions.jsonl`](eval/questions.jsonl) has 100 test questions:
 
-The traps are leak detectors, not softballs. Two ask about the **Digital Services Act** and the **Cyber Resilience Act** — EU regulation the model knows well, in the same register as the corpus, but absent from it.
+- 80 answerable ones, each labelled with the provision that answers it
+  (e.g. GDPR Article 33 for the data-breach deadline).
+- 20 traps with no answer in the corpus: other EU laws (Digital Services Act,
+  Data Act, NIS2, ...), case law, and off-topic questions.
 
-```powershell
-python eval\run_eval.py --no-llm           # retrieval metrics only (fast)
-python eval\run_eval.py                    # full run incl. LLM-as-judge
-python eval\run_eval.py --k 10 --name k10  # other retrieval depths
+> The evaluation questions are AI-generated.
+
+```bash
+python -m eval.run_eval --no-llm   # retrieval only
+python -m eval.run_eval            # with answers, refusals and LLM-as-judge
+python -m eval.run_eval --plain    # plain top-k, without the two rules
 ```
 
-Each run stores every answer *and the excerpts behind it*, so re-analysis costs no further LLM calls.
+**Retrieval** (`eval/results/`): how often the top-k contains the provision
+that answers the question.
 
-### Results
+| k  | plain top-k | with the two rules |
+|----|-------------|--------------------|
+| 3  | 58/80       | **73/80**          |
+| 5  | 66/80       | **73/80**          |
+| 10 | 74/80       | **75/80**          |
 
-k=5, local `gpt-oss:20b`, 32 questions (`eval/results/k5.json`):
-
-| Metric | Value | |
-|---|---|---|
-| Document hit-rate | 1.00 | saturated by construction — only two documents |
-| **Provision hit-rate** | **0.96** | 25/26 |
-| False refusals | 0.00 | all 26 answerable questions answered |
-| **Refusal accuracy** | **0.83** | **5/6 — one trap broke the grounding contract** |
-| Citation rate | 1.00 | |
-| **Misattribution rate** | **0.03** | 1/32 |
-| Faithfulness | 0.96 | judged by the same model that generated, so an upper bound |
+**Answers**: the full run with a local `gpt-oss:20b` was done on the first 32
+questions (`eval/results/k5.json`). It answered all 26 answerable questions,
+refused 5 of the 6 traps, cited its sources in all 26 answers, and scored
+0.96 on faithfulness (judged by the same model, so an upper bound).
 
 ### Findings
 
-**1. One trap breaks the contract, and prompting does not fix it.** Asked what the **Cyber Resilience Act** requires, the system does not refuse. Retrieval hands it AI Act Recitals 77-78 and Articles 41/42/47 — all genuinely about conformity assessment and cybersecurity — and it answers *"The EU Cyber Resilience Act requires that products with digital elements undergo a conformity assessment…"*. Every excerpt is real and every claim appears in the sources; only the law it is attributed to is invented.
-
-An explicit prompt rule against this was added and **measured as ineffective** — the trap failed again with the same opening sentence. It is kept but documented as insufficient. The failure is specific: the neighbouring DSA trap is refused correctly, because nothing in the corpus is close enough to bridge to. The model is not disobeying an instruction; it fails to notice that "the Act" in its excerpts and "the Act" in the question are different laws. A deterministic guard — running the `misattribution` check at answer time and forcing a refusal — is the honest fix.
-
-**2. Provision hit-rate is the only retrieval metric with headroom.** Document hit-rate cannot be other than 1.00 with two documents. One question misses at provision level: *"What security measures must controllers and processors implement?"* returns GDPR Recital 95 and Articles 24/28/70 but not Article 32, titled *Security of processing*. The gold label was verified — a genuine retrieval failure.
-
-**3. Cross-regulation bleed causes both PARTIAL verdicts.** *"What conditions must consent meet?"* retrieves GDPR Article 7 in the top three and AI Act Article 61 (consent for real-world testing) in slots 4-5, and the answer merges the two. Finding 1 in a milder form.
-
-**4. The citation metric was under-reporting, caught by error analysis.** Models cite as `[1]`, `【3】` or `【1†L1-L3】`; the original pattern scored the last form as uncited. Because raw answers are stored, the fix was applied retroactively without re-running a single LLM call.
+- **The ranking rules matter most when k is small.** At k=3 they lift
+  retrieval from 58 to 73 of 80; at k=10 there is room for everything anyway.
+- **Some misses find the explanation, not the rule.** For 3 of the 7 misses at
+  k=5 (emotion recognition at work, credit scoring, the household exemption)
+  a recital stating the same rule is retrieved, but not the article. Others are
+  worse: the maximum fine for a prohibited AI practice retrieves Article 100
+  (fines for EU institutions, up to EUR 1.5 million) instead of Article 99
+  (EUR 35 million or 7% of turnover).
+- **One trap breaks the refusal.** Asked about the Cyber Resilience Act, which
+  the AI Act only mentions indirectly (Recital 77), the model presented AI Act
+  excerpts as that law. A prompt rule did not stop it; a string check at answer
+  time (like the one the eval uses) would.
 
 ## Tests
 
-```powershell
-pytest -q        # 41 tests, no network, model or index required
+```bash
+pip install -r requirements-dev.txt
+pytest
 ```
 
-Covering the EUR-Lex parser, provision chunking, the selection algorithm (diversity cap, reserved slots, no duplicates), prompt construction, and config/benchmark invariants.
+The tests need no network, model or LLM.
