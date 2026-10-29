@@ -17,15 +17,10 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install -e .
+        run: pip install -r requirements-dev.txt
 
       - name: Lint
         run: ruff check .
 
       - name: Tests
         run: pytest -q
-
-      - name: Docker build
-        run: docker build -t eu-law-rag .

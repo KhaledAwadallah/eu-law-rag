@@ -1,23 +1,11 @@
-# Virtual environment — machine-specific, recreated from requirements.txt
-.venv/
-
-# Corpus data — the downloaded EUR-Lex HTML and everything derived from it are
-# reproducible by re-running the pipeline, so they stay out of git. The vector
-# index is the exception: the deployed app needs it at runtime and cannot
-# rebuild it there (~14 MB, well under GitHub's limit).
+# Downloaded and derived corpus files can be rebuilt with the pipeline. The
+# vector index is kept: the deployed app needs it and never rebuilds it.
 data/*
 !data/chroma/
 
-# Hugging Face model cache (Docker volume mount) — model weights, plus
-# symlinks that Windows git cannot index
-.hfcache/
-
-# Secrets — API keys live here, never in git
+.venv/
 .env
-
-# Python build/cache junk
 __pycache__/
 *.pyc
-*.egg-info/
 .pytest_cache/
 .ruff_cache/
